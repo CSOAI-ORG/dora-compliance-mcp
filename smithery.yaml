@@ -1,0 +1,58 @@
+name: dora-compliance-mcp
+description: 'Dora Compliance tools for AI agents. Built by MEOK AI Labs.'
+version: 1.0.0
+tools:
+- name: classify_entity
+  description: 'Classify Entity operation.'
+  parameters:
+  - name: input
+    type: string
+    required: true
+- name: list_pillars
+  description: 'List Pillars operation.'
+  parameters:
+  - name: input
+    type: string
+    required: true
+- name: audit_pillar
+  description: 'Audit Pillar operation.'
+  parameters:
+  - name: input
+    type: string
+    required: true
+- name: audit_all_pillars
+  description: 'Audit All Pillars operation.'
+  parameters:
+  - name: input
+    type: string
+    required: true
+- name: classify_incident
+  description: 'Classify Incident operation.'
+  parameters:
+  - name: input
+    type: string
+    required: true
+- name: register_of_information_template
+  description: 'Register Of Information Template operation.'
+  parameters:
+  - name: input
+    type: string
+    required: true
+- name: tlpt_readiness
+  description: 'Tlpt Readiness operation.'
+  parameters:
+  - name: input
+    type: string
+    required: true
+- name: get_dora_certificate
+  description: 'Get Dora Certificate operation.'
+  parameters:
+  - name: input
+    type: string
+    required: true
+- name: enforcement_status
+  description: 'Enforcement Status operation.'
+  parameters:
+  - name: input
+    type: string
+    required: true
