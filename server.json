@@ -1,0 +1,22 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "CSOAI-ORG/dora-compliance-mcp",
+  "version": "1.0.0",
+  "description": "Dora Compliance MCP Server by MEOK AI Labs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CSOAI-ORG/dora-compliance-mcp",
+    "source": "https://github.com/CSOAI-ORG/dora-compliance-mcp"
+  },
+  "packages": [
+    {
+      "registryType": "pypi",
+      "identifier": "dora-compliance-mcp",
+      "version": "1.0.0",
+      "runtimeHint": "python",
+      "transport": {
+        "type": "stdio"
+      }
+    }
+  ]
+}
