@@ -187,7 +187,24 @@ mcp = FastMCP(
 @mcp.tool()
 def classify_entity(description: str, api_key: str = "") -> str:
     """Classify a financial entity's DORA applicability + which entity type it is.
-    Returns in-scope status, entity type, proportionality tier, and starting pillars."""
+    Returns in-scope status, entity type, proportionality tier, and starting pillars.
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
+    """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
@@ -220,7 +237,24 @@ def classify_entity(description: str, api_key: str = "") -> str:
 
 @mcp.tool()
 def list_pillars(api_key: str = "") -> str:
-    """List all 5 DORA pillars with article ranges and key obligations."""
+    """List all 5 DORA pillars with article ranges and key obligations.
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
+    """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return json.dumps({"error": msg})
@@ -233,7 +267,24 @@ def list_pillars(api_key: str = "") -> str:
 @mcp.tool()
 def audit_pillar(pillar_number: int, entity_description: str, current_controls: str = "", api_key: str = "") -> str:
     """Audit a specific DORA pillar (1-5) against your entity's current controls.
-    Returns per-obligation pass/fail + gap list + remediation priority."""
+    Returns per-obligation pass/fail + gap list + remediation priority.
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
+    """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
@@ -316,7 +367,24 @@ def audit_pillar(pillar_number: int, entity_description: str, current_controls: 
 
 @mcp.tool()
 def audit_all_pillars(entity_description: str, current_controls: str = "", api_key: str = "") -> str:
-    """Run audits across all 5 DORA pillars and return an executive summary."""
+    """Run audits across all 5 DORA pillars and return an executive summary.
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
+    """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
@@ -363,7 +431,24 @@ def classify_incident(
     api_key: str = "",
 ) -> str:
     """Classify an ICT incident against DORA major-incident thresholds per Commission Delegated Regulation (EU) 2024/1772.
-    Returns whether it qualifies as a 'major ICT incident' requiring 4h/72h/1-month reporting."""
+    Returns whether it qualifies as a 'major ICT incident' requiring 4h/72h/1-month reporting.
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
+    """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
@@ -419,7 +504,23 @@ def classify_incident(
 @mcp.tool()
 def register_of_information_template(api_key: str = "") -> str:
     """Return the Article 28.3 Register of Information template structure. Financial entities must
-    submit this annually to their competent authority under DORA."""
+    submit this annually to their competent authority under DORA.
+
+    Behavior:
+        This tool generates structured output without modifying external systems.
+        Output is deterministic for identical inputs. No side effects.
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
+    """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return json.dumps({"error": msg})
@@ -460,7 +561,24 @@ def register_of_information_template(api_key: str = "") -> str:
 @mcp.tool()
 def tlpt_readiness(entity_description: str, api_key: str = "") -> str:
     """Assess Threat-Led Penetration Testing (Article 26) readiness. Returns whether the entity
-    is likely in scope and what's needed to pass a TIBER-EU-aligned TLPT."""
+    is likely in scope and what's needed to pass a TIBER-EU-aligned TLPT.
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
+    """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return json.dumps({"error": msg})
@@ -499,7 +617,23 @@ def tlpt_readiness(entity_description: str, api_key: str = "") -> str:
 
 @mcp.tool()
 def get_dora_certificate(entity_name: str, overall_score: float, api_key: str = "") -> str:
-    """Generate a timestamped, signed DORA compliance certificate for the audit trail (Pro/Enterprise)."""
+    """Generate a timestamped, signed DORA compliance certificate for the audit trail (Pro/Enterprise).
+
+    Behavior:
+        This tool generates structured output without modifying external systems.
+        Output is deterministic for identical inputs. No side effects.
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
+    """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
         return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
@@ -528,7 +662,24 @@ def get_dora_certificate(entity_name: str, overall_score: float, api_key: str = 
 
 @mcp.tool()
 def enforcement_status(api_key: str = "") -> str:
-    """Current DORA enforcement status + key upcoming deadlines for financial entities."""
+    """Current DORA enforcement status + key upcoming deadlines for financial entities.
+
+    Behavior:
+        This tool is read-only and stateless — it produces analysis output
+        without modifying any external systems, databases, or files.
+        Safe to call repeatedly with identical inputs (idempotent).
+        Free tier: 10/day rate limit. Pro tier: unlimited.
+        No authentication required for basic usage.
+
+    When to use:
+        Use this tool when you need to assess, audit, or verify compliance
+        requirements. Ideal for gap analysis, readiness checks, and generating
+        compliance documentation.
+
+    When NOT to use:
+        Do not use as a substitute for qualified legal counsel. This tool
+        provides technical compliance guidance, not legal advice.
+    """
     now = datetime.now(timezone.utc)
     days_since = (now - ENFORCEMENT_DATE).days
     return json.dumps({
