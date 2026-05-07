@@ -1,3 +1,5 @@
+[![dora-compliance-mcp MCP server](https://glama.ai/mcp/servers/CSOAI-ORG/dora-compliance-mcp/badges/card.svg)](https://glama.ai/mcp/servers/CSOAI-ORG/dora-compliance-mcp)
+
 <div align="center">
 
 [![PyPI](https://img.shields.io/pypi/v/dora-compliance-mcp)](https://pypi.org/project/dora-compliance-mcp/)
