@@ -1,94 +1,63 @@
-[![dora-compliance-mcp MCP server](https://glama.ai/mcp/servers/CSOAI-ORG/dora-compliance-mcp/badges/score.svg)](https://glama.ai/mcp/servers/CSOAI-ORG/dora-compliance-mcp)
-[![MCP Registry](https://img.shields.io/badge/MCP_Registry-Published-green)](https://registry.modelcontextprotocol.io)
-[![PyPI](https://img.shields.io/pypi/v/dora-compliance-mcp)](https://pypi.org/project/dora-compliance-mcp/)
-
-[![dora-compliance-mcp MCP server](https://glama.ai/mcp/servers/CSOAI-ORG/dora-compliance-mcp/badges/card.svg)](https://glama.ai/mcp/servers/CSOAI-ORG/dora-compliance-mcp)
-
 <div align="center">
 
-[![PyPI](https://img.shields.io/pypi/v/dora-compliance-mcp)](https://pypi.org/project/dora-compliance-mcp/)
-[![Downloads](https://img.shields.io/pypi/dm/dora-compliance-mcp)](https://pypi.org/project/dora-compliance-mcp/)
-[![GitHub stars](https://img.shields.io/github/stars/CSOAI-ORG/dora-compliance-mcp)](https://github.com/CSOAI-ORG/dora-compliance-mcp/stargazers)
+# Dora Compliance MCP
+
+**MCP server for dora compliance mcp operations**
+
+[![PyPI](https://img.shields.io/pypi/v/meok-dora-compliance-mcp)](https://pypi.org/project/meok-dora-compliance-mcp/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-
-# DORA Compliance MCP
-
-**Automate DORA (Digital Operational Resilience Act) compliance for EU financial entities.**
-
-Regulation (EU) 2022/2554 — enforcement live since 17 January 2025. Penalties: up to 1% of average daily worldwide turnover for CTPPs.
-
-[![MEOK AI Labs](https://img.shields.io/badge/MEOK_AI_Labs-224+_servers-purple)](https://meok.ai)
-
-[Install](#install) · [Tools](#tools) · [Pricing](#pricing) · [Attestation API](#attestation-api)
+[![MEOK AI Labs](https://img.shields.io/badge/MEOK_AI_Labs-MCP_Server-purple)](https://meok.ai)
 
 </div>
 
----
+## Overview
 
-## Why This Exists
-
-DORA has been enforceable since January 2025. Every EU bank, insurer, investment firm, and their critical ICT providers must demonstrate operational resilience across 5 pillars. The regulation requires ICT risk management frameworks, incident reporting within 4 hours, threat-led penetration testing (TLPT), and third-party risk registers.
-
-Traditional DORA compliance involves hiring consultancies at €800-1,500/day for 6-12 months. This MCP automates the 5-pillar assessment, generates Article 28 register entries, runs TLPT planning checklists, and produces incident classification templates — all from a single Claude prompt.
-
-## Install
-
-```bash
-pip install dora-compliance-mcp
-```
+Dora Compliance MCP provides AI-powered tools via the Model Context Protocol (MCP).
 
 ## Tools
 
-| Tool | DORA Pillar | What it does |
-|------|-------------|-------------|
-| `assess_ict_risk` | Pillar 1 | ICT risk management framework assessment |
-| `classify_incident` | Pillar 2 | Incident classification per Article 18 criteria |
-| `plan_tlpt` | Pillar 3 | Threat-led penetration testing planning |
-| `assess_third_party` | Pillar 4 | Article 28 ICT third-party risk register |
-| `check_information_sharing` | Pillar 5 | Information sharing arrangement audit |
-| `run_full_audit` | All 5 | Complete 5-pillar DORA readiness assessment |
-| `sign_attestation` | — | HMAC-SHA256 signed compliance certificate |
+| Tool | Description |
+|------|-------------|
+| `classify_entity` | Classify a financial entity's DORA applicability + which entity type it is. |
+| `list_pillars` | List all 5 DORA pillars with article ranges and key obligations. |
+| `audit_pillar` | Audit a specific DORA pillar (1-5) against your entity's current controls. |
+| `audit_all_pillars` | Run audits across all 5 DORA pillars and return an executive summary. |
+| `classify_incident` | Classify an ICT incident against DORA major-incident thresholds per Commission D |
+| `register_of_information_template` | Return the Article 28.3 Register of Information template structure. Financial en |
+| `tlpt_readiness` | Assess Threat-Led Penetration Testing (Article 26) readiness. Returns whether th |
+| `get_dora_certificate` | Generate a cryptographically signed DORA compliance attestation (Pro/Enterprise) |
+| `enforcement_status` | Current DORA enforcement status + key upcoming deadlines for financial entities. |
 
-## Example
+## Installation
 
-```
-Prompt: "Our bank uses 3 cloud providers and 2 SaaS fintech tools.
-Run a full DORA 5-pillar assessment. Flag any ICT concentration risk
-and generate the Article 28 register entries."
-
-Result: 5-pillar assessment with ICT concentration risk flagged on
-cloud provider dependency, Article 28 register entries for all 5
-third parties, incident reporting template, TLPT scope recommendation.
-Each section signed with attestation cert.
+```bash
+pip install meok-dora-compliance-mcp
 ```
 
-## Pricing
+## Usage with Claude Desktop
 
-| Tier | Price | What you get |
-|------|-------|-------------|
-| **Free** | £0 | 10 calls/day — risk assessment + incident classification |
-| **Pro** | £199/mo | Unlimited + HMAC-signed attestations + verify URLs |
-| **Enterprise** | £1,499/mo | Multi-tenant + co-branded reports + webhooks |
+Add to your Claude Desktop MCP config (`claude_desktop_config.json`):
 
-[Subscribe to Pro](https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836) · [Enterprise](https://buy.stripe.com/4gM9AV80kaEG0ZT42k8k837)
-
-## Attestation API
-
-```
-POST https://meok-attestation-api.vercel.app/sign
-GET  https://meok-attestation-api.vercel.app/verify/{cert_id}
+```json
+{
+  "mcpServers": {
+    "dora-compliance-mcp": {
+      "command": "python",
+      "args": ["-m", "meok_dora_compliance_mcp.server"]
+    }
+  }
+}
 ```
 
-Zero-dep verifier: `pip install meok-attestation-verify`
+## Usage with FastMCP
 
-## Links
+```python
+from mcp.server.fastmcp import FastMCP
 
-- Website: [meok.ai](https://meok.ai)
-- All MCP servers: [meok.ai/labs/mcp/servers](https://meok.ai/labs/mcp/servers)
-- Also see: [DORA + NIS2 Crosswalk MCP](https://github.com/CSOAI-ORG/dora-nis2-crosswalk-mcp) for dual compliance
-- Enterprise support: nicholas@csoai.org
+# This server exposes 9 tool(s) via MCP
+# See server.py for full implementation
+```
 
 ## License
 
-MIT
-<!-- mcp-name: io.github.CSOAI-ORG/dora-compliance-mcp -->
+MIT © [MEOK AI Labs](https://meok.ai)
