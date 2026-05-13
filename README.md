@@ -10,6 +10,18 @@
 
 </div>
 
+
+## Quick Install
+
+| Client | Install |
+|--------|---------|
+| **Claude Desktop** | [![Install in Claude](https://img.shields.io/badge/Install-Claude-blue)](https://claude.ai) |
+| **Cursor** | [![Install in Cursor](https://img.shields.io/badge/Install-Cursor-black)](https://cursor.com) |
+| **VS Code** | [![Install in VS Code](https://img.shields.io/badge/Install-VS_Code-blue)](https://code.visualstudio.com) |
+| **Windsurf** | [![Install in Windsurf](https://img.shields.io/badge/Install-Windsurf-purple)](https://codeium.com/windsurf) |
+| **Docker** | `docker run -p 8000:8000 dora-compliance-mcp` |
+| **pip** | `pip install dora-compliance-mcp` |
+
 ## Overview
 
 Dora Compliance MCP provides AI-powered tools via the Model Context Protocol (MCP).

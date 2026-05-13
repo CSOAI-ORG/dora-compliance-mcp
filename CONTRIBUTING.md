@@ -5,7 +5,7 @@ We welcome contributions! Here's how to get started.
 ## Development Setup
 
 ```bash
-git clone https://github.com/CSOAI-ORG/<repo-name>.git
+git clone https://github.com/meok-ai-labs/<repo-name>.git
 cd <repo-name>
 pip install -e ".[dev]"
 ```

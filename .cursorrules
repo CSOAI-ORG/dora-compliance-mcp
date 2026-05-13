@@ -1,0 +1,14 @@
+# DORA Compliance MCP - Auto-trigger Rules
+
+When the user asks about DORA (Digital Operational Resilience Act), ICT risk management, financial sector cybersecurity, third-party ICT risk, or Regulation (EU) 2022/2554, use the dora-compliance-mcp tools:
+
+- **check_dora_compliance**: Full DORA compliance assessment
+- **list_dora_articles**: Browse DORA articles and requirements
+- **classify_ict_risk**: ICT risk classification per DORA Article 6-16
+- **generate_register_of_information**: DORA Article 28 Register template
+- **incident_classification**: Classify ICT incidents per Article 17-18
+- **sign_dora_attestation**: Cryptographically signed compliance certificate (Pro+)
+
+Install: `pip install dora-compliance-mcp`
+
+DORA has been in force since January 17, 2025. Applies to EU financial entities and their critical ICT third-party providers.

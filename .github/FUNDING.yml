@@ -1,7 +1,7 @@
 # Sponsor MEOK Labs's open-source compliance MCPs
 # All packages MIT-licensed. Supports the Sigstore migration + ongoing maintenance.
 
-github: [CSOAI-ORG]
+github: [meok-ai-labs]
 custom:
   - "https://buy.stripe.com/eVq9AV4O87sudMF42k8k839"
   - "https://meok.ai/sponsor"

@@ -46,8 +46,69 @@ except ImportError:
         return True, "OK", "free"
 
 
+try:
+    from attestation import get_attestation_tool_response
+    _ATTESTATION_LOCAL = True
+except ImportError:
+    _ATTESTATION_LOCAL = False
+
+_ATTESTATION_API = _os.environ.get(
+    "MEOK_ATTESTATION_API", "https://meok-attestation-api.vercel.app"
+)
+
+
+def _sign_via_api(api_key: str, regulation: str, entity: str, score: float,
+                  findings: list, articles_audited: list, tier: str = "pro",
+                  include_pdf_base64: bool = False) -> dict:
+    """Fallback: hit the remote MEOK signing API when the local module isn't present.
+    Used by PyPI-installed MCPs that don't have ~/clawd/meok-labs-engine/shared on path."""
+    import urllib.request as _url, urllib.error as _urlerr
+    payload = {
+        "api_key": api_key, "regulation": regulation, "entity": entity,
+        "score": score, "findings": findings or [],
+        "articles_audited": articles_audited or [], "tier": tier,
+    }
+    try:
+        req = _url.Request(
+            f"{_ATTESTATION_API}/sign",
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+        )
+        with _url.urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read())
+    except _urlerr.HTTPError as e:
+        try:
+            return json.loads(e.read())
+        except Exception:
+            return {"error": f"Attestation API HTTP {e.code}. Contact hello@meok.ai."}
+    except Exception as e:
+        return {"error": f"Could not reach MEOK attestation API: {e}. Contact hello@meok.ai."}
+
+
+def _attestation(regulation, entity, score, findings, articles_audited, tier,
+                 include_pdf_base64, api_key):
+    """Try local module first (fast, for Nick's dev machine), fall back to remote API."""
+    if _ATTESTATION_LOCAL:
+        return get_attestation_tool_response(
+            regulation=regulation, entity=entity, score=score, findings=findings,
+            articles_audited=articles_audited, tier=tier,
+            include_pdf_base64=include_pdf_base64,
+        )
+    return _sign_via_api(
+        api_key=api_key, regulation=regulation, entity=entity, score=score,
+        findings=findings, articles_audited=articles_audited or [], tier=tier,
+        include_pdf_base64=include_pdf_base64,
+    )
+
+
 def check_access(api_key: str = ""):
     return _shared_check_access(api_key)
+
+
+# ── Stripe payment links ────────────────────────────────────────
+STRIPE_199 = "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836"
+STRIPE_1499 = "https://buy.stripe.com/4gM9AV80kaEG0ZT42k8k837"
+STRIPE_5K = "https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833"
 
 
 # ── Rate limiting ───────────────────────────────────────────────
@@ -64,8 +125,7 @@ def _check_rate_limit(caller: str = "anonymous", tier: str = "free") -> Optional
     if len(_usage[caller]) >= FREE_DAILY_LIMIT:
         return (
             f"Free tier limit reached ({FREE_DAILY_LIMIT}/day). "
-            "Upgrade to MEOK AI Labs Pro at £49/mo for unlimited access: "
-            "https://meok.ai/pricing"
+            f"Upgrade to MEOK AI Labs Pro at £199/mo for unlimited access + signed attestations: {STRIPE_199}"
         )
     _usage[caller].append(now)
     return None
@@ -226,9 +286,9 @@ def classify_entity(description: str, api_key: str = "") -> str:
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
+        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836"})
     if err := _check_rate_limit(tier=tier):
-        return json.dumps({"error": err, "upgrade_url": "https://meok.ai/pricing"})
+        return json.dumps({"error": err, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836"})
 
     d = description.lower()
     matches = []
@@ -345,7 +405,7 @@ def audit_pillar(pillar_number: int, entity_description: str, current_controls: 
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
+        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836"})
     if err := _check_rate_limit(tier=tier):
         return json.dumps({"error": err})
 
@@ -465,12 +525,12 @@ def audit_all_pillars(entity_description: str, current_controls: str = "", api_k
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
+        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836"})
     if tier == "free":
         return json.dumps({
-            "error": "audit_all_pillars requires Starter tier (£49/mo) or above.",
+            "error": "audit_all_pillars requires Starter tier (£199/mo) or above.",
             "free_alternative": "Run audit_pillar(N, ...) individually (10/day limit).",
-            "upgrade_url": "https://meok.ai/pricing",
+            "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
         })
     if err := _check_rate_limit(tier=tier):
         return json.dumps({"error": err})
@@ -552,7 +612,7 @@ def classify_incident(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
+        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836"})
     if err := _check_rate_limit(tier=tier):
         return json.dumps({"error": err})
 
@@ -754,68 +814,51 @@ def tlpt_readiness(entity_description: str, api_key: str = "") -> str:
 
 
 @mcp.tool()
-def get_dora_certificate(entity_name: str, overall_score: float, api_key: str = "") -> str:
-    """Generate a timestamped, signed DORA compliance certificate for the audit trail (Pro/Enterprise).
+def get_dora_certificate(
+    entity_name: str,
+    overall_score: float,
+    findings_csv: str = "",
+    articles_audited_csv: str = "",
+    include_pdf_base64: bool = False,
+    api_key: str = "",
+) -> str:
+    """Generate a cryptographically signed DORA compliance attestation (Pro/Enterprise).
 
-    Behavior:
-        This tool generates structured output without modifying external systems.
-        Output is deterministic for identical inputs. No side effects.
-        Free tier: 10/day rate limit. Pro tier: unlimited.
-        No authentication required for basic usage.
-
-    When to use:
-        Use this tool when you need to assess, audit, or verify compliance
-        requirements. Ideal for gap analysis, readiness checks, and generating
-        compliance documentation.
-
-    When NOT to use:
-        Do not use as a substitute for qualified legal counsel. This tool
-        provides technical compliance guidance, not legal advice.
+    Uses the shared MEOK attestation module (HMAC-SHA256 signed JSON + verify URL +
+    optional base64-encoded PDF). Share the verify_url with your auditor / board /
+    procurement team — the signature is cryptographically binding and any tampering
+    invalidates it. Certificates expire 365 days from issue.
 
     Args:
-        entity_name (str): The entity name to analyze or process.
-        overall_score (float): The overall score to analyze or process.
-        api_key (str): The api key to analyze or process.
-
-    Behavioral Transparency:
-        - Side Effects: This tool is read-only and produces no side effects. It does not modify
-          any external state, databases, or files. All output is computed in-memory and returned
-          directly to the caller.
-        - Authentication: No authentication required for basic usage. Pro/Enterprise tiers
-          require a valid MEOK API key passed via the MEOK_API_KEY environment variable.
-        - Rate Limits: Free tier: 10 calls/day. Pro tier: unlimited. Rate limit headers are
-          included in responses (X-RateLimit-Remaining, X-RateLimit-Reset).
-        - Error Handling: Returns structured error objects with 'error' key on failure.
-          Never raises unhandled exceptions. Invalid inputs return descriptive validation errors.
-        - Idempotency: Fully idempotent — calling with the same inputs always produces the
-          same output. Safe to retry on timeout or transient failure.
-        - Data Privacy: No input data is stored, logged, or transmitted to external services.
-          All processing happens locally within the MCP server process.
+        entity_name (str): The entity name to appear on the certificate.
+        overall_score (float): Overall compliance score (0–100).
+        findings_csv (str): Comma-separated list of article-level findings (e.g. "Article 9: PASS,Article 28: GAP")
+        articles_audited_csv (str): Comma-separated article numbers (e.g. "9,10,28")
+        include_pdf_base64 (bool): Set True to also receive a board-ready PDF as base64.
+        api_key (str): MEOK API key (Pro/Enterprise tier).
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
+        return json.dumps({"error": msg, "upgrade_url": STRIPE_199})
     if tier == "free":
         return json.dumps({
-            "error": "Signed certificates require Pro (£49/mo) or Enterprise tier.",
-            "upgrade_url": "https://meok.ai/pricing",
+            "error": "Signed attestations require Pro (£199/mo) or Enterprise tier.",
+            "upgrade_url": STRIPE_199,
+            "why_pro": "Cryptographic HMAC signature + public verify URL + PDF auditors accept. Unsigned self-reports don't pass procurement.",
         })
-    import hashlib
-    ts = datetime.now(timezone.utc)
-    payload = f"{entity_name}|{ts.isoformat()}|{overall_score}|DORA|MEOK_AI_LABS"
-    h = hashlib.sha256(payload.encode()).hexdigest()
-    return json.dumps({
-        "certificate_id": f"MEOK-DORA-{h[:12].upper()}",
-        "entity": entity_name,
-        "issued_utc": ts.isoformat(),
-        "valid_until_utc": (ts + timedelta(days=365)).isoformat(),
-        "regulation": "Regulation (EU) 2022/2554 — DORA",
-        "overall_score_percent": overall_score,
-        "assessment": "COMPLIANT" if overall_score >= 70 else "PARTIAL" if overall_score >= 40 else "NON_COMPLIANT",
-        "signature_hash_sha256": h,
-        "issuer": "MEOK AI Labs",
-        "disclaimer": "Automated self-assessment. Does not substitute for competent-authority review. No warranty.",
-    }, indent=2)
+    findings = [f.strip() for f in findings_csv.split(",") if f.strip()]
+    articles = [a.strip() for a in articles_audited_csv.split(",") if a.strip()]
+    cert = _attestation(
+        regulation="DORA (Regulation (EU) 2022/2554)",
+        entity=entity_name,
+        score=overall_score,
+        findings=findings or [f"Overall DORA posture score: {overall_score}"],
+        articles_audited=articles or None,
+        tier=tier,
+        include_pdf_base64=include_pdf_base64,
+        api_key=api_key,
+    )
+    return json.dumps(cert, indent=2)
 
 
 @mcp.tool()

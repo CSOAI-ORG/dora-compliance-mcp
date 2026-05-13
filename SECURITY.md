@@ -11,7 +11,7 @@
 
 If you discover a security vulnerability, please report it responsibly:
 
-1. **Email**: security@csoai.org
+1. **Email**: security@meok.ai
 2. **Do NOT** open a public GitHub issue for security vulnerabilities
 3. Include a description of the vulnerability and steps to reproduce
 

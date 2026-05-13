@@ -1,0 +1,10 @@
+{
+  "name": "DORA Compliance",
+  "description": "Digital Operational Resilience Act compliance for financial sector",
+  "vendor": "MEOK AI Labs",
+  "sourceUrl": "https://github.com/meok-ai-labs/dora-compliance-mcp",
+  "homepage": "https://meok.ai/mcp/dora-compliance-mcp",
+  "license": "MIT",
+  "runtime": "python",
+  "entryPoint": "server.py"
+}
