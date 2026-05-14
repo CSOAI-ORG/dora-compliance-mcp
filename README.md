@@ -61,3 +61,5 @@ from mcp.server.fastmcp import FastMCP
 ## License
 
 MIT © [MEOK AI Labs](https://meok.ai)
+
+<!-- mcp-name: io.github.CSOAI-ORG/dora-compliance-mcp -->
