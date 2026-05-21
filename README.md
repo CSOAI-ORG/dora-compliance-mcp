@@ -75,6 +75,38 @@ Part of the MEOK **Governance** pack — designed to work together as a fleet. I
 
 Full catalogue + Anthropic Registry verify links: [meok.ai/anthropic-registry](https://meok.ai/anthropic-registry)
 
+
+## Protocol coverage + Universal PAYG
+
+This MCP is part of MEOK's 47-MCP fleet that bridges every active agent-interop protocol
+and 30+ regulatory frameworks. See the full coverage matrix at [meok.ai/protocols](https://meok.ai/protocols).
+
+**Agent interop protocols supported (8 live):**
+
+- ✅ **MCP** (Anthropic) — native
+- ✅ **A2A** (Google + Linux Foundation, absorbed IBM ACP Sept 2025)
+- ✅ **IBM ACP** — covered via A2A merge
+- ◐ **Stripe ACP** (Agentic Commerce Protocol) — Q3 bridge via [agent-commerce-protocol-mcp](https://github.com/CSOAI-ORG/agent-commerce-protocol-mcp)
+- ◐ **AP2** (Google Agent Payments) — partial via [agent-commerce-payments-mcp](https://github.com/CSOAI-ORG/agent-commerce-payments-mcp)
+- ◐ **x402** (Coinbase HTTP 402) — partial via api.meok.ai gateway
+- → **OASF / AGNTCY** (Cisco Outshift + Linux Foundation) — Q3 bridge
+- 👁 **ANP** (Cisco Agent Network) — watch-list
+
+**Pricing options:**
+
+| Option | Price | Best for |
+|---|---|---|
+| Self-host (this MCP) | £0 — MIT | Devs |
+| This MCP Starter | £29/mo | One-MCP teams |
+| This MCP Pro | £79/mo | Production + 24h SLA |
+| [Universal PAYG](https://buy.stripe.com/00w3cxcgAaEGcIBcyQ8k90s) | £29/mo + £0.0002/call | Spiky usage across many MCPs |
+| Substrate bundle (this category) | £99-£499/mo | A whole pack |
+| [MEOK Universe](https://buy.stripe.com/cNi9AV0xS8wy5g9aqI8k90u) | £1,499/mo | All 47 MCPs, 500K calls |
+
+Each tier above the free self-host adds HMAC-signed attestations verifiable at
+`verify.meok.ai`. Linux Foundation governance on the A2A spine means EU regulated
+buyers can deploy without vendor-lock-in objections.
+
 <!-- mcp-name: io.github.CSOAI-ORG/dora-compliance-mcp -->
 =======
 ### Run a full DORA audit
