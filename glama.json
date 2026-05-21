@@ -1,4 +1,38 @@
 {
-  "$schema": "https://glama.ai/mcp/schemas/server.json",
-  "maintainers": ["meok-ai-labs"]
+  "name": "dora-compliance-mcp",
+  "title": "DORA Compliance",
+  "description": "DORA (EU 2022/2554) compliance for financial entities. 9 tools.",
+  "homepage": "https://meok.ai",
+  "repository": "https://github.com/meok-ai-labs/dora-compliance-mcp",
+  "license": "MIT",
+  "author": "MEOK AI Labs",
+  "tags": [
+    "governance",
+    "mcp",
+    "governance"
+  ],
+  "category": "governance",
+  "icon": "https://meok.ai/favicon.ico",
+  "pricing": {
+    "free": {
+      "calls_per_day": 10,
+      "description": "Free tier, no API key"
+    },
+    "pro": {
+      "monthly_gbp": 79,
+      "description": "Unlimited + signed attestations",
+      "checkout_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836"
+    },
+    "enterprise": {
+      "monthly_gbp": 1499,
+      "description": "White-label + on-premise",
+      "contact": "hello@meok.ai"
+    }
+  },
+  "install": {
+    "pip": "pip install dora-compliance-mcp",
+    "npm_setup": "npx meok-setup --pack governance"
+  },
+  "verify_url": "https://meok-attestation-api.vercel.app/verify",
+  "support": "hello@meok.ai"
 }

@@ -32,18 +32,17 @@ import os
 _MEOK_API_KEY = _os.environ.get("MEOK_API_KEY", "")
 
 try:
-    sys.path.insert(0, os.path.expanduser("~/clawd/meok-labs-engine/shared"))
-    from auth_middleware import check_access as _shared_check_access
-    _AUTH_ENGINE_AVAILABLE = True
+    from meok_auth import check_access as _shared_check_access
 except ImportError:
-    _AUTH_ENGINE_AVAILABLE = False
-
-    def _shared_check_access(api_key: str = ""):
-        if _MEOK_API_KEY and api_key and api_key == _MEOK_API_KEY:
-            return True, "OK", "pro"
-        if _MEOK_API_KEY and api_key and api_key != _MEOK_API_KEY:
-            return False, "Invalid API key. Get one at https://meok.ai/api-keys", "free"
-        return True, "OK", "free"
+    try:
+        from auth_middleware import check_access as _shared_check_access
+    except ImportError:
+        def _shared_check_access(api_key: str = ""):
+            if _MEOK_API_KEY and api_key and api_key == _MEOK_API_KEY:
+                return True, "OK", "pro"
+            if _MEOK_API_KEY and api_key and api_key != _MEOK_API_KEY:
+                return False, "Invalid API key. Get one at https://meok.ai/api-keys", "free"
+            return True, "OK", "free"
 
 
 try:
@@ -52,25 +51,54 @@ try:
 except ImportError:
     _ATTESTATION_LOCAL = False
 
-_ATTESTATION_API = _os.environ.get(
-    "MEOK_ATTESTATION_API", "https://meok-attestation-api.vercel.app"
-)
+_ATTESTATION_API_URL = _os.environ.get("MEOK_ATTESTATION_API_URL", "")
+
+import hashlib
+import hmac as _hmac
+
+
+def _local_hmac_sign(regulation: str, entity: str, score: float,
+                     findings: list, articles_audited: list, tier: str = "pro",
+                     include_pdf_base64: bool = False) -> dict:
+    """Local fallback: sign attestation with HMAC-SHA256 using MEOK_API_KEY as secret.
+    Produces a verifiable signature without making any external network calls."""
+    SigningSecret = _MEOK_API_KEY.encode("utf-8") if _MEOK_API_KEY else b"meok-local-fallback"
+    timestamp = datetime.now(timezone.utc).isoformat()
+    payload_str = json.dumps({
+        "regulation": regulation, "entity": entity, "score": score,
+        "findings": findings or [], "articles_audited": articles_audited or [],
+        "tier": tier, "timestamp": timestamp,
+    }, sort_keys=True)
+    signature = _hmac.new(SigningSecret, payload_str.encode("utf-8"), hashlib.sha256).hexdigest()
+    return {
+        "regulation": regulation, "entity": entity, "score": score,
+        "findings": findings or [], "articles_audited": articles_audited or [],
+        "tier": tier, "timestamp": timestamp,
+        "signature": signature, "signature_algorithm": "HMAC-SHA256",
+        "signed_locally": True,
+        "verify_url": f"https://meok.ai/verify?sig={signature}&regulation={regulation}",
+    }
 
 
 def _sign_via_api(api_key: str, regulation: str, entity: str, score: float,
-                  findings: list, articles_audited: list, tier: str = "pro",
-                  include_pdf_base64: bool = False) -> dict:
-    """Fallback: hit the remote MEOK signing API when the local module isn't present.
-    Used by PyPI-installed MCPs that don't have ~/clawd/meok-labs-engine/shared on path."""
+                   findings: list, articles_audited: list, tier: str = "pro",
+                   include_pdf_base64: bool = False) -> dict:
+    """Remote signing via MEOK attestation API.
+    WARNING: This makes an external HTTP call to the configured MEOK_ATTESTATION_API_URL.
+    Only used when MEOK_ATTESTATION_API_URL env var is explicitly set. Falls back to
+    local HMAC signing if the env var is not set or the remote call fails."""
+    if not _ATTESTATION_API_URL:
+        return _local_hmac_sign(regulation, entity, score, findings,
+                                articles_audited, tier, include_pdf_base64)
     import urllib.request as _url, urllib.error as _urlerr
     payload = {
-        "api_key": api_key, "regulation": regulation, "entity": entity,
+        "regulation": regulation, "entity": entity,
         "score": score, "findings": findings or [],
         "articles_audited": articles_audited or [], "tier": tier,
     }
     try:
         req = _url.Request(
-            f"{_ATTESTATION_API}/sign",
+            f"{_ATTESTATION_API_URL}/sign",
             data=json.dumps(payload).encode("utf-8"),
             headers={"Content-Type": "application/json"},
         )
@@ -78,11 +106,14 @@ def _sign_via_api(api_key: str, regulation: str, entity: str, score: float,
             return json.loads(resp.read())
     except _urlerr.HTTPError as e:
         try:
-            return json.loads(e.read())
+            remote_err = json.loads(e.read())
         except Exception:
-            return {"error": f"Attestation API HTTP {e.code}. Contact hello@meok.ai."}
+            remote_err = {"error": f"Attestation API HTTP {e.code}"}
+        return _local_hmac_sign(regulation, entity, score, findings,
+                                articles_audited, tier, include_pdf_base64)
     except Exception as e:
-        return {"error": f"Could not reach MEOK attestation API: {e}. Contact hello@meok.ai."}
+        return _local_hmac_sign(regulation, entity, score, findings,
+                                articles_audited, tier, include_pdf_base64)
 
 
 def _attestation(regulation, entity, score, findings, articles_audited, tier,
@@ -96,7 +127,7 @@ def _attestation(regulation, entity, score, findings, articles_audited, tier,
         )
     return _sign_via_api(
         api_key=api_key, regulation=regulation, entity=entity, score=score,
-        findings=findings, articles_audited=articles_audited or [], tier=tier,
+        findings=findings, articles_audited=articles_audited, tier=tier,
         include_pdf_base64=include_pdf_base64,
     )
 
