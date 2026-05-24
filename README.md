@@ -12,6 +12,25 @@
 
 Full compliance automation for the EU Digital Operational Resilience Act (Regulation 2022/2554). Covers all 5 pillars: ICT Risk Management, Incident Reporting, Digital Operational Resilience Testing, ICT Third-Party Risk, and Information Sharing.
 
+
+## 🆕 Quote verbatim DORA text in any audit
+
+Install our sister MCP and pipe it through your agent for auditor-defensible quotes:
+
+```bash
+pip install eu-ai-act-compliance-mcp  # 1.5.1+
+```
+
+```python
+# In your Claude / OpenAI tool-use agent:
+search_regulation(query="incident reporting", regulation="dora", limit=3)
+get_article_text(regulation="dora", article_number=17)
+```
+
+Returns verbatim DORA text from publications.europa.eu Cellar (SPARQL-synced daily) with a canonical EUR-Lex deep link on every snippet — drop straight into audit evidence packs.
+
+---
+
 ## Tools
 
 | Tool | Description | Parameters |
