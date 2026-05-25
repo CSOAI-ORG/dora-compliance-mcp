@@ -137,9 +137,9 @@ def check_access(api_key: str = ""):
 
 
 # ── Stripe payment links ────────────────────────────────────────
-STRIPE_199 = "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836"
-STRIPE_1499 = "https://buy.stripe.com/4gM9AV80kaEG0ZT42k8k837"
-STRIPE_5K = "https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833"
+STRIPE_199 = "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"
+STRIPE_1499 = "https://buy.stripe.com/4gM9AV80kaEG0ZT42k8k837?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"
+STRIPE_5K = "https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"
 
 
 # ── Rate limiting ───────────────────────────────────────────────
@@ -317,9 +317,9 @@ def classify_entity(description: str, api_key: str = "") -> str:
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836"})
+        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
     if err := _check_rate_limit(tier=tier):
-        return json.dumps({"error": err, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836"})
+        return json.dumps({"error": err, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
 
     d = description.lower()
     matches = []
@@ -436,7 +436,7 @@ def audit_pillar(pillar_number: int, entity_description: str, current_controls: 
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836"})
+        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
     if err := _check_rate_limit(tier=tier):
         return json.dumps({"error": err})
 
@@ -556,12 +556,12 @@ def audit_all_pillars(entity_description: str, current_controls: str = "", api_k
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836"})
+        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
     if tier == "free":
         return json.dumps({
             "error": "audit_all_pillars requires Starter tier (£199/mo) or above.",
             "free_alternative": "Run audit_pillar(N, ...) individually (10/day limit).",
-            "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836",
+            "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail",
         })
     if err := _check_rate_limit(tier=tier):
         return json.dumps({"error": err})
@@ -643,7 +643,7 @@ def classify_incident(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836"})
+        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/14A4gB3K4eUWgYR56o8k836?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
     if err := _check_rate_limit(tier=tier):
         return json.dumps({"error": err})
 
