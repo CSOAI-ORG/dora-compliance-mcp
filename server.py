@@ -947,6 +947,190 @@ def enforcement_status(api_key: str = "") -> str:
     }, indent=2)
 
 
+# ---------------------------------------------------------------------------
+# Tool: generate_incident_report — DORA RTS-compliant ICT incident template
+# ---------------------------------------------------------------------------
+# Closes https://github.com/CSOAI-ORG/dora-compliance-mcp/issues/1
+# Templates aligned with Commission Delegated Regulation (EU) 2024/1772
+# (classification criteria) and Commission Implementing Regulation (EU)
+# 2024/2956 (incident-reporting forms).
+
+_DORA_SEVERITY_TIERS = {
+    "anomalous": {
+        "label": "Anomalous activity",
+        "criteria": "Single ICT anomaly — no client impact, no data loss, contained within minutes. Logged for internal review only.",
+        "reporting_obligation": "No external report. Maintain in internal incident register (Article 17).",
+        "internal_log_only": True,
+    },
+    "significant": {
+        "label": "Significant ICT-related incident",
+        "criteria": (
+            "Meets ANY of: ≥10% of clients affected; service unavailable >2h; "
+            "data integrity impacted with material consequence; relevant economic impact threshold per Article 4 of Delegated Reg 2024/1772."
+        ),
+        "reporting_obligation": (
+            "Initial notification ≤4h after classification (Article 19(4)(a)). "
+            "Intermediate report ≤72h. Final report ≤1 month."
+        ),
+        "internal_log_only": False,
+    },
+    "major": {
+        "label": "Major ICT-related incident",
+        "criteria": (
+            "Cumulative thresholds per Delegated Reg 2024/1772 Article 6: "
+            "critical services affected, ≥25% client base, recurring service disruption, "
+            "loss of confidentiality/integrity/availability with material impact. "
+            "Cross-border or systemic relevance amplifies classification."
+        ),
+        "reporting_obligation": (
+            "Initial notification ≤4h after classification (tightest reporting clock in EU regulation). "
+            "Intermediate ≤72h. Final ≤1 month. ESAs receive aggregate via competent authority."
+        ),
+        "internal_log_only": False,
+    },
+    "significant_cyber_threat": {
+        "label": "Significant cyber threat (voluntary)",
+        "criteria": "Confirmed threat that could have led to a significant or major incident if not stopped. Voluntary notification per Article 19(2).",
+        "reporting_obligation": "Voluntary. Use the same template, mark voluntary=true in initial notification.",
+        "internal_log_only": False,
+    },
+}
+
+
+@mcp.tool()
+def generate_incident_report(
+    severity: str = "significant",
+    entity_name: str = "",
+    incident_summary: str = "",
+    api_key: str = ""
+) -> dict:
+    """Generate a DORA RTS-compliant ICT incident report template.
+
+    Args:
+        severity: One of anomalous, significant, major, significant_cyber_threat.
+        entity_name: Reporting entity legal name (optional — leaves placeholder if empty).
+        incident_summary: One-sentence description of the incident (optional).
+        api_key: MEOK API key (Pro tier gets the HMAC-signed evidence pack version).
+
+    Returns:
+        Initial (T+4h), intermediate (T+72h) and final (T+1mo) report templates
+        with every field defined by Commission Implementing Regulation (EU) 2024/2956.
+        Fields are pre-filled where deterministic and marked TODO where the
+        compliance officer must supply specifics.
+
+    Behavior:
+        Read-only template generator. Stateless and idempotent.
+        Free tier: 10/day. PAYG: £0.05/call (set MEOK_PAYG_KEY). Pro: unlimited.
+    """
+    try:
+        allowed, msg, tier_obj = _shared_check_access(api_key)
+        if not allowed:
+            return {"error": msg, "upgrade": "https://meok.ai/pricing"}
+        tier = tier_obj if isinstance(tier_obj, str) else tier_obj.value
+    except Exception:
+        tier = "free"
+
+    sev = severity.lower().strip()
+    if sev not in _DORA_SEVERITY_TIERS:
+        return {
+            "error": f"Unknown severity '{severity}'. Valid: {', '.join(_DORA_SEVERITY_TIERS)}",
+            "tier_definitions": _DORA_SEVERITY_TIERS,
+        }
+
+    classification = _DORA_SEVERITY_TIERS[sev]
+    placeholder_entity = entity_name or "[ENTITY LEGAL NAME]"
+    placeholder_summary = incident_summary or "[ONE-SENTENCE INCIDENT SUMMARY — describe nature + scope]"
+
+    initial_template = {
+        "report_type": "INITIAL_NOTIFICATION",
+        "deadline_from_classification": "≤ 4 hours (Article 19(4)(a) of DORA)",
+        "fields": {
+            "reporting_entity_name": placeholder_entity,
+            "reporting_entity_lei": "[20-CHAR LEGAL ENTITY IDENTIFIER]",
+            "competent_authority": "[NATIONAL CA — e.g. BaFin, AMF, FCA, Bank of Italy]",
+            "incident_classification": classification["label"],
+            "classification_criteria_met": "[LIST CRITERIA FROM DELEGATED REG 2024/1772 ART 4-6]",
+            "incident_id_internal": "[YOUR INTERNAL TICKET / SIEM ID]",
+            "discovered_at_utc": "[ISO 8601 TIMESTAMP]",
+            "classified_at_utc": "[ISO 8601 TIMESTAMP — when DORA threshold reached]",
+            "summary": placeholder_summary,
+            "services_affected": "[LIST AFFECTED ICT SERVICES + CLIENT-FACING IMPACT]",
+            "geographic_scope": "[MEMBER STATES + ANY THIRD COUNTRIES AFFECTED]",
+            "cross_border": "[true/false — affects clients/operations in >1 Member State]",
+            "voluntary": sev == "significant_cyber_threat",
+            "ongoing": "[true/false]",
+        },
+    }
+
+    intermediate_template = {
+        "report_type": "INTERMEDIATE_UPDATE",
+        "deadline_from_classification": "≤ 72 hours (Article 19(4)(b))",
+        "fields": {
+            "incident_id_internal": "[SAME AS INITIAL]",
+            "current_status": "[contained / mitigated / under-investigation / resolved]",
+            "preliminary_root_cause": "[BEST KNOWLEDGE AT T+72h]",
+            "impact_so_far": {
+                "clients_affected_count": "[NUMBER]",
+                "transactions_impacted": "[NUMBER]",
+                "data_records_compromised": "[NUMBER OR 'NONE']",
+                "service_downtime_minutes": "[NUMBER]",
+                "economic_impact_estimate_eur": "[BEST ESTIMATE OR 'PENDING']",
+            },
+            "actions_taken": "[CONTAINMENT, CLIENT NOTIFICATION, REGULATORY OUTREACH]",
+            "third_parties_notified": "[CTPP, SUB-PROVIDERS, INDUSTRY CSIRT, ETC.]",
+            "personal_data_breach_gdpr": "[true/false — if true, ART 33 GDPR clock also runs]",
+            "criminal_activity_suspected": "[true/false — if true, law enforcement notified]",
+        },
+    }
+
+    final_template = {
+        "report_type": "FINAL_REPORT",
+        "deadline_from_classification": "≤ 1 month (Article 19(4)(c))",
+        "fields": {
+            "incident_id_internal": "[SAME AS INITIAL]",
+            "root_cause_analysis": "[FULL RCA — technical, procedural, human factors]",
+            "total_impact": {
+                "clients_affected_final": "[NUMBER]",
+                "data_records_compromised_final": "[NUMBER]",
+                "economic_impact_final_eur": "[FINAL FIGURE]",
+                "regulatory_breaches": "[LIST OF DORA/NIS2/GDPR ARTICLES BREACHED]",
+            },
+            "remediation_actions": "[CORRECTIVE + PREVENTIVE ACTIONS WITH OWNERS + DUE DATES]",
+            "lessons_learned": "[KEY POLICY/CONTROL/PROCESS CHANGES]",
+            "tprm_review_required": "[true/false — was the incident triggered by CTPP/sub-provider?]",
+            "tlpt_recommendation": "[true/false — does this warrant a Threat-Led Penetration Test?]",
+            "board_approved": "[true/false — Article 5 requires governance approval]",
+            "submitted_by": "[NAME + ROLE]",
+            "submitted_at_utc": "[ISO 8601 TIMESTAMP]",
+        },
+    }
+
+    return {
+        "severity": classification,
+        "templates": {
+            "initial_notification_T+4h": initial_template,
+            "intermediate_update_T+72h": intermediate_template,
+            "final_report_T+1mo": final_template,
+        },
+        "legal_basis": (
+            "DORA Article 17 (incident-management process), Article 18 (classification), "
+            "Article 19 (reporting). Templates align with Commission Delegated Regulation "
+            "(EU) 2024/1772 (classification criteria) and Commission Implementing Regulation "
+            "(EU) 2024/2956 (reporting forms)."
+        ),
+        "next_step": (
+            "Pre-populate the [PLACEHOLDERS] from your SIEM/ITSM event payload, then submit "
+            "via your national competent authority's portal."
+        ),
+        "tier": tier,
+        "upgrade_for_signed_version": (
+            "Pro tier (£199/mo) emits an HMAC-SHA256 signed evidence-pack version of the report "
+            "with a public verify URL — auditor-defensible without releasing the underlying SIEM data."
+        ),
+        "disclaimer": "Not legal advice. Confirm scope with your competent authority.",
+    }
+
+
 def main():
     """Entry point for the DORA compliance MCP server."""
     mcp.run()
