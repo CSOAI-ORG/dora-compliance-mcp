@@ -12,7 +12,7 @@ Usage in any server.py:
     async def my_tool(query: str, api_key: str = "") -> str:
         allowed, msg, tier = check_access(api_key)
         if not allowed:
-            return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
+            return json.dumps({"error": msg, "upgrade_url": "https://councilof.ai"})
         # ... tool logic ...
         audit_log(api_key, "my_tool", "eu_ai_act", "result_summary", tier)
         return json.dumps(result)
@@ -54,25 +54,87 @@ PAYG_TOPUP_URL = os.environ.get("MEOK_PAYG_TOPUP_URL", "https://councilof.ai/pay
 PAYG_X402_RECEIVER = os.environ.get("MEOK_X402_RECEIVER", "")  # USDC on Base L2 wallet
 PAYG_BALANCE_FILE = os.path.join(os.path.expanduser("~/.meok"), "payg_balance.json")
 
+# Set MEOK_PAYG_SERVER_URL on the client to use SERVER-SIDE balance tracking
+# instead of the local-file fallback. With the server set, the customer's token
+# resolves against Stripe customer metadata (the source of truth for real
+# top-ups). Without the server, behaviour falls back to the local JSON file —
+# useful for offline/single-machine testing but DOES NOT honour real Stripe
+# top-ups. Strongly recommended for any agent that actually paid:
+#   export MEOK_PAYG_SERVER_URL=https://meok-attestation-api.vercel.app/payg
+PAYG_SERVER_URL = os.environ.get("MEOK_PAYG_SERVER_URL", "").rstrip("/")
+
 
 def _payg_token_present() -> bool:
     """True iff the caller has opted into pay-per-call billing."""
     return bool(os.environ.get("MEOK_PAYG_KEY", "").strip())
 
 
+def _payg_server_deduct(token: str, amount_gbp: float) -> Tuple[bool, float]:
+    """Server-side deduction via the meok-attestation-api PAYG endpoint.
+
+    Returns (success, remaining_gbp). On any failure (network, 5xx, malformed
+    response), returns (False, 0.0) so the caller falls through to the upsell
+    path. Never raises — we want the MCP tool to keep responding even if the
+    PAYG server is briefly unreachable.
+    """
+    if not PAYG_SERVER_URL or not token:
+        return False, 0.0
+    import urllib.request as _ur
+    import urllib.error as _ue
+    payload = json.dumps({"token": token, "amount_gbp": amount_gbp}).encode("utf-8")
+    req = _ur.Request(
+        f"{PAYG_SERVER_URL}/deduct",
+        data=payload,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    try:
+        with _ur.urlopen(req, timeout=8) as resp:
+            data = json.loads(resp.read())
+        return bool(data.get("ok")), float(data.get("balance_gbp", 0.0))
+    except _ue.HTTPError as e:
+        # 402 = insufficient balance. Read body to surface remaining.
+        try:
+            data = json.loads(e.read())
+        except Exception:
+            data = {}
+        return False, float(data.get("balance_gbp", 0.0))
+    except Exception:
+        return False, 0.0
+
+
 def _payg_balance(token: str) -> float:
-    """Read current balance (in GBP) for a PAYG token."""
+    """Read current balance (in GBP) for a PAYG token.
+
+    Server mode: queries /payg/balance against MEOK_PAYG_SERVER_URL.
+    Local mode (no server URL): reads ~/.meok/payg_balance.json (single-machine).
+    """
     if not token:
         return 0.0
+    if PAYG_SERVER_URL:
+        import urllib.request as _ur
+        try:
+            with _ur.urlopen(f"{PAYG_SERVER_URL}/balance?token={token}", timeout=6) as resp:
+                data = json.loads(resp.read())
+            return float(data.get("balance_gbp", 0.0))
+        except Exception:
+            return 0.0
     _ensure_dir()
     bal = _load_json(PAYG_BALANCE_FILE)
     return float(bal.get(token, 0.0))
 
 
 def _payg_deduct(token: str, amount_gbp: float) -> Tuple[bool, float]:
-    """Try to deduct `amount_gbp` from balance. Returns (success, remaining)."""
+    """Try to deduct `amount_gbp` from balance. Returns (success, remaining).
+
+    Routes to the server when MEOK_PAYG_SERVER_URL is set (the case for any
+    real paying customer — Stripe customer metadata is the source of truth).
+    Falls back to the local JSON file when no server is configured.
+    """
     if not token:
         return False, 0.0
+    if PAYG_SERVER_URL:
+        return _payg_server_deduct(token, amount_gbp)
     _ensure_dir()
     bal = _load_json(PAYG_BALANCE_FILE)
     current = float(bal.get(token, 0.0))
@@ -90,7 +152,7 @@ def payg_upsell_line(tool_name: str = "this tool") -> str:
     return (
         f"PAYG (no subscription, £{PAYG_PRICE_PER_CALL_GBP:.2f}/call): "
         f"set MEOK_PAYG_KEY and top up at {PAYG_TOPUP_URL} — works with "
-        f"agent-driven workflows. Or upgrade to a tier at https://meok.ai/pricing."
+        f"agent-driven workflows. Or upgrade to a tier at https://councilof.ai."
     )
 
 MEOK_DIR = os.path.expanduser("~/.meok")
@@ -213,7 +275,7 @@ def require_tier(minimum: Tier, current: Tier) -> Tuple[bool, str]:
         return (
             False,
             f"Requires {minimum.value} tier. Current: {current.value}. "
-            f"Upgrade at https://meok.ai/pricing",
+            f"Upgrade at https://councilof.ai",
         )
     return True, "OK"
 
