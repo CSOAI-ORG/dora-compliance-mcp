@@ -28,6 +28,7 @@ from enum import Enum
 
 class Tier(str, Enum):
     FREE = "free"
+    PAYG = "payg"            # pay-per-call via MEOK_PAYG_KEY env var (£0.05/call)
     STARTER = "starter"
     PROFESSIONAL = "professional"
     ENTERPRISE = "enterprise"
@@ -35,12 +36,62 @@ class Tier(str, Enum):
 
 TIER_LIMITS = {
     Tier.FREE:          {"calls_per_day": 10,   "frameworks": 1,  "audit_trail": False},
+    Tier.PAYG:          {"calls_per_day": -1,   "frameworks": -1, "audit_trail": True},
     Tier.STARTER:       {"calls_per_day": 100,  "frameworks": 1,  "audit_trail": False},
     Tier.PROFESSIONAL:  {"calls_per_day": 1000, "frameworks": 5,  "audit_trail": True},
     Tier.ENTERPRISE:    {"calls_per_day": -1,   "frameworks": -1, "audit_trail": True},
 }
 
-TIER_ORDER = [Tier.FREE, Tier.STARTER, Tier.PROFESSIONAL, Tier.ENTERPRISE]
+TIER_ORDER = [Tier.FREE, Tier.PAYG, Tier.STARTER, Tier.PROFESSIONAL, Tier.ENTERPRISE]
+
+# ── Pay-per-call (PAYG) configuration ──────────────────────────────────
+# Agents can opt into per-call billing instead of a subscription by setting
+# the MEOK_PAYG_KEY env var. Each tool call deducts £0.05 (or whatever the
+# rate is for that tool) from the balance fronted via the council storefront
+# PAYG top-up page. When balance hits zero the tool returns a top-up URL.
+PAYG_PRICE_PER_CALL_GBP = float(os.environ.get("MEOK_PAYG_RATE_GBP", "0.05"))
+PAYG_TOPUP_URL = os.environ.get("MEOK_PAYG_TOPUP_URL", "https://councilof.ai/payg")
+PAYG_X402_RECEIVER = os.environ.get("MEOK_X402_RECEIVER", "")  # USDC on Base L2 wallet
+PAYG_BALANCE_FILE = os.path.join(os.path.expanduser("~/.meok"), "payg_balance.json")
+
+
+def _payg_token_present() -> bool:
+    """True iff the caller has opted into pay-per-call billing."""
+    return bool(os.environ.get("MEOK_PAYG_KEY", "").strip())
+
+
+def _payg_balance(token: str) -> float:
+    """Read current balance (in GBP) for a PAYG token."""
+    if not token:
+        return 0.0
+    _ensure_dir()
+    bal = _load_json(PAYG_BALANCE_FILE)
+    return float(bal.get(token, 0.0))
+
+
+def _payg_deduct(token: str, amount_gbp: float) -> Tuple[bool, float]:
+    """Try to deduct `amount_gbp` from balance. Returns (success, remaining)."""
+    if not token:
+        return False, 0.0
+    _ensure_dir()
+    bal = _load_json(PAYG_BALANCE_FILE)
+    current = float(bal.get(token, 0.0))
+    if current < amount_gbp:
+        return False, current
+    bal[token] = round(current - amount_gbp, 4)
+    _save_json(PAYG_BALANCE_FILE, bal)
+    return True, bal[token]
+
+
+def payg_upsell_line(tool_name: str = "this tool") -> str:
+    """Universal upsell line that always shows BOTH paths: subscription + PAYG.
+    Drop this into any rate-limit response so callers always see both options.
+    """
+    return (
+        f"PAYG (no subscription, £{PAYG_PRICE_PER_CALL_GBP:.2f}/call): "
+        f"set MEOK_PAYG_KEY and top up at {PAYG_TOPUP_URL} — works with "
+        f"agent-driven workflows. Or upgrade to a tier at https://meok.ai/pricing."
+    )
 
 MEOK_DIR = os.path.expanduser("~/.meok")
 USAGE_FILE = os.path.join(MEOK_DIR, "usage.json")
@@ -104,34 +155,55 @@ def check_access(api_key: str = "", framework: str = None) -> Tuple[bool, str, T
     """
     Main access control function. Returns (allowed, message, tier).
     Call at the start of every tool.
+
+    Resolution order:
+      1. PAYG: MEOK_PAYG_KEY env var → deduct from balance; reject with top-up URL when empty.
+      2. Subscription: api_key tier → enforce daily rate limit.
+      3. Anonymous free tier: 10 calls/day, capped.
+    Free callers ALSO see PAYG as an alternative in the rate-limit response so
+    they can opt into per-call billing without a subscription.
     """
+    # ── PAYG path: env var beats subscription ──
+    payg_token = os.environ.get("MEOK_PAYG_KEY", "").strip()
+    if payg_token:
+        ok, remaining = _payg_deduct(payg_token, PAYG_PRICE_PER_CALL_GBP)
+        if ok:
+            return True, f"OK (PAYG · £{remaining:.2f} remaining)", Tier.PAYG
+        return (
+            False,
+            f"PAYG balance exhausted (£{remaining:.2f} left, needs £{PAYG_PRICE_PER_CALL_GBP:.2f}). "
+            f"Top up at {PAYG_TOPUP_URL} — Stripe + USDC-on-Base both accepted.",
+            Tier.PAYG,
+        )
+
+    # ── Subscription / free tier path ──
     tier = get_tier_from_api_key(api_key)
     limits = TIER_LIMITS[tier]
-    
+
     # Rate limit check
     usage = _load_json(USAGE_FILE)
     today = time.strftime("%Y-%m-%d")
     key_hash = hashlib.sha256((api_key or "anon").encode()).hexdigest()[:12]
     day_key = f"{key_hash}:{today}"
-    
+
     current = usage.get(day_key, 0)
     max_calls = limits["calls_per_day"]
-    
+
     if max_calls != -1 and current >= max_calls:
         return (
             False,
             f"Rate limit reached ({max_calls}/day on {tier.value} tier). "
-            f"Upgrade at https://meok.ai/pricing",
+            f"{payg_upsell_line()}",
             tier,
         )
-    
+
     # Record usage
     usage[day_key] = current + 1
     # Clean old entries (keep last 7 days)
     cutoff = time.strftime("%Y-%m-%d", time.localtime(time.time() - 7 * 86400))
     usage = {k: v for k, v in usage.items() if k.split(":")[1] >= cutoff}
     _save_json(USAGE_FILE, usage)
-    
+
     return True, "OK", tier
 
 
