@@ -1,6 +1,7 @@
 # Dora Compliance MCP
 
 [![MEOK AI Labs](https://img.shields.io/badge/MEOK-AI%20Labs-667eea)](https://meok.ai)
+[![PAYG enabled](https://img.shields.io/badge/PAYG-%C2%A30.05%2Fcall-7c3aed?logo=stripe&logoColor=white&labelColor=1a1a2e)](https://councilof.ai/payg)
 [![EU AI Act](https://img.shields.io/badge/EU%20AI%20Act-Compliant-22c55e)](https://councilof.ai)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![PyPI](https://img.shields.io/badge/PyPI-Install-3775a9)](https://pypi.org/project/dora_compliance_mcp/)
