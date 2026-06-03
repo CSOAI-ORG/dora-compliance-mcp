@@ -21,6 +21,27 @@ pip install dora_compliance_mcp
 npx -y @smithery/cli@latest install dora-compliance-mcp --client claude
 ```
 
+## ⚡ Pay-per-call (PAYG) — no subscription
+
+This MCP supports universal pay-per-call billing across the MEOK compliance fleet:
+
+```bash
+# One-time setup
+export MEOK_PAYG_KEY="your_topup_token"
+
+# Every tool call now deducts £0.05 from your balance.
+# When balance hits zero, the tool returns a top-up URL.
+# Works across all 7 MEOK compliance MCPs with the same token.
+```
+
+- **No subscription** — top up once, deduct per call.
+- **£0.05/call default** (configurable via `MEOK_PAYG_RATE_GBP`).
+- **USDC on Base L2 accepted** — set `MEOK_X402_RECEIVER` and pay via stablecoin.
+- **Backward-compatible** — when `MEOK_PAYG_KEY` is unset, behaviour is unchanged.
+
+**Get a token**: [councilof.ai/payg](https://councilof.ai/payg) (£10 / £50 / £200 top-up tiers).
+
+
 ## ✨ Features
 
 - MCP protocol compliant
