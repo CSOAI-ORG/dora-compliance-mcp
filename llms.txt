@@ -87,3 +87,8 @@ Current DORA enforcement status and upcoming deadlines.
 result = classify_entity(description="EU-licensed payment institution processing cross-border transfers")
 # Returns: in_scope=True, entity_type="payment_institution", proportionality="full_regime"
 ```
+
+## Pay-per-call (PAYG)
+
+This MCP supports MEOK_PAYG_KEY env var for £0.05-per-call billing without a subscription.
+Top up: https://councilof.ai/payg
