@@ -22,7 +22,14 @@ import json
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 from collections import defaultdict
-from mcp.server.fastmcp import FastMCP
+from mcp.server.fastmcp import FastMCP, Context
+try:
+    from meok_x402 import paywalled, is_paid_call  # x402 per-call agent billing — no-op unless X402_ENABLED
+except ImportError:  # vendored module absent — stay free
+    def paywalled(*_a, **_k):
+        return lambda fn: fn
+    def is_paid_call() -> bool:
+        return False
 
 # ── Authentication ──────────────────────────────────────────────
 import os as _os
@@ -150,6 +157,8 @@ _usage: dict[str, list[datetime]] = defaultdict(list)
 def _check_rate_limit(caller: str = "anonymous", tier: str = "free") -> Optional[str]:
     if tier in ("pro", "professional", "enterprise"):
         return None
+    if is_paid_call():
+        return None  # settled x402 payment — this call is already paid for
     now = datetime.now(timezone.utc)
     cutoff = now - timedelta(days=1)
     _usage[caller] = [t for t in _usage[caller] if t > cutoff]
@@ -393,8 +402,12 @@ def list_pillars(api_key: str = "") -> str:
 
 
 @mcp.tool()
-def audit_pillar(pillar_number: int, entity_description: str, current_controls: str = "", api_key: str = "") -> str:
-    """Audit a specific DORA pillar (1-5) against your entity's current controls.
+@paywalled(price="$0.10")
+def audit_pillar(pillar_number: int, entity_description: str, current_controls: str = "", api_key: str = "",
+    ctx: Context = None) -> str:
+    """COST WARNING: $0.10/call on x402-billed deployments (hosted); free when self-hosted or X402 is disabled.
+
+    Audit a specific DORA pillar (1-5) against your entity's current controls.
     Returns per-obligation pass/fail + gap list + remediation priority.
 
     Behavior:
@@ -515,8 +528,12 @@ def audit_pillar(pillar_number: int, entity_description: str, current_controls: 
 
 
 @mcp.tool()
-def audit_all_pillars(entity_description: str, current_controls: str = "", api_key: str = "") -> str:
-    """Run audits across all 5 DORA pillars and return an executive summary.
+@paywalled(price="$0.50")
+def audit_all_pillars(entity_description: str, current_controls: str = "", api_key: str = "",
+    ctx: Context = None) -> str:
+    """COST WARNING: $0.50/call on x402-billed deployments (hosted); free when self-hosted or X402 is disabled.
+
+    Run audits across all 5 DORA pillars and return an executive summary.
 
     Behavior:
         This tool is read-only and stateless — it produces analysis output
@@ -591,6 +608,7 @@ def audit_all_pillars(entity_description: str, current_controls: str = "", api_k
 
 
 @mcp.tool()
+@paywalled(price="$0.10")
 def classify_incident(
     incident_description: str,
     clients_affected: int = 0,
@@ -598,8 +616,10 @@ def classify_incident(
     economic_impact_eur: float = 0,
     data_loss: bool = False,
     api_key: str = "",
-) -> str:
-    """Classify an ICT incident against DORA major-incident thresholds per Commission Delegated Regulation (EU) 2024/1772.
+    ctx: Context = None) -> str:
+    """COST WARNING: $0.10/call on x402-billed deployments (hosted); free when self-hosted or X402 is disabled.
+
+    Classify an ICT incident against DORA major-incident thresholds per Commission Delegated Regulation (EU) 2024/1772.
     Returns whether it qualifies as a 'major ICT incident' requiring 4h/72h/1-month reporting.
 
     Behavior:
@@ -694,8 +714,12 @@ def classify_incident(
 
 
 @mcp.tool()
-def register_of_information_template(api_key: str = "") -> str:
-    """Return the Article 28.3 Register of Information template structure. Financial entities must
+@paywalled(price="$0.25")
+def register_of_information_template(api_key: str = "",
+    ctx: Context = None) -> str:
+    """COST WARNING: $0.25/call on x402-billed deployments (hosted); free when self-hosted or X402 is disabled.
+
+    Return the Article 28.3 Register of Information template structure. Financial entities must
     submit this annually to their competent authority under DORA.
 
     Behavior:
@@ -845,6 +869,7 @@ def tlpt_readiness(entity_description: str, api_key: str = "") -> str:
 
 
 @mcp.tool()
+@paywalled(price="$0.25")
 def get_dora_certificate(
     entity_name: str,
     overall_score: float,
@@ -852,8 +877,10 @@ def get_dora_certificate(
     articles_audited_csv: str = "",
     include_pdf_base64: bool = False,
     api_key: str = "",
-) -> str:
-    """Generate a cryptographically signed DORA compliance attestation (Pro/Enterprise).
+    ctx: Context = None) -> str:
+    """COST WARNING: $0.25/call on x402-billed deployments (hosted); free when self-hosted or X402 is disabled.
+
+    Generate a cryptographically signed DORA compliance attestation (Pro/Enterprise).
 
     Uses the shared MEOK attestation module (HMAC-SHA256 signed JSON + verify URL +
     optional base64-encoded PDF). Share the verify_url with your auditor / board /
