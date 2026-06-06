@@ -281,7 +281,10 @@ class TestEnforcementStatus:
 
 class TestGetDoraCertificate:
     def test_free_tier_rejected(self):
-        result = json.loads(srv.get_dora_certificate("Test Bank", 75.0))
+        # This test exercises the real free-tier gate, so undo the module-level
+        # autouse patch (which forces pro/OK) for the duration of this call.
+        with patch.object(srv, "check_access", return_value=(True, "OK", "free")):
+            result = json.loads(srv.get_dora_certificate("Test Bank", 75.0))
         assert "error" in result
 
     def test_pro_tier_local_attestation(self):
@@ -352,6 +355,14 @@ class TestLocalHmacSign:
 
 
 class TestRateLimiting:
+    @pytest.fixture(autouse=True)
+    def bypass_auth_and_rate_limit(self):
+        # Override the module-level autouse fixture: this test exercises the real
+        # rate limiter, so it must NOT be patched out here.
+        srv._usage.clear()
+        yield
+        srv._usage.clear()
+
     def test_rate_limit_enforced(self):
         for i in range(srv.FREE_DAILY_LIMIT + 1):
             result = json.loads(srv.classify_entity("Credit institution"))
