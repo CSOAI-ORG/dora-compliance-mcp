@@ -2,7 +2,7 @@
 Tests for DORA Compliance MCP Server
 ======================================
 Tests every @mcp.tool() function directly (no MCP protocol).
-Run: cd /Users/nicholas/clawd/mcp-marketplace/dora-compliance-mcp && pytest test_server.py -v
+Run: pytest test_server.py -v
 """
 
 import json
