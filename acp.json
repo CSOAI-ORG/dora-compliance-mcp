@@ -1,0 +1,28 @@
+{
+  "acpVersion": "0.1",
+  "agent": {
+    "name": "dora-compliance-mcp",
+    "description": "DORA (EU Digital Operational Resilience Act) compliance for AI agents. 5-pillar audit, incident ...",
+    "version": "1.4.4",
+    "provider": "MEOK AI Labs",
+    "interfaces": [
+      {
+        "type": "mcp",
+        "transport": "stdio",
+        "package": "dora-compliance-mcp"
+      }
+    ],
+    "capabilities": [
+      "classify_entity",
+      "list_pillars",
+      "audit_pillar",
+      "audit_all_pillars",
+      "classify_incident",
+      "register_of_information_template",
+      "tlpt_readiness",
+      "get_dora_certificate",
+      "enforcement_status",
+      "generate_incident_report"
+    ]
+  }
+}

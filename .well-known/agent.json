@@ -1,0 +1,113 @@
+{
+  "name": "dora-compliance-mcp",
+  "description": "DORA (EU Digital Operational Resilience Act) compliance for AI agents. 5-pillar audit, incident ...",
+  "url": "https://proofof.ai/scorecard/dora-compliance-mcp.html",
+  "version": "1.4.4",
+  "protocolVersion": "0.2.0",
+  "provider": {
+    "organization": "MEOK AI Labs",
+    "url": "https://meok.ai"
+  },
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false
+  },
+  "defaultInputModes": [
+    "text"
+  ],
+  "defaultOutputModes": [
+    "text"
+  ],
+  "skills": [
+    {
+      "id": "classify_entity",
+      "name": "Classify Entity",
+      "description": "classify_entity via dora-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "list_pillars",
+      "name": "List Pillars",
+      "description": "list_pillars via dora-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "audit_pillar",
+      "name": "Audit Pillar",
+      "description": "audit_pillar via dora-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "audit_all_pillars",
+      "name": "Audit All Pillars",
+      "description": "audit_all_pillars via dora-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "classify_incident",
+      "name": "Classify Incident",
+      "description": "classify_incident via dora-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "register_of_information_template",
+      "name": "Register Of Information Template",
+      "description": "register_of_information_template via dora-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "tlpt_readiness",
+      "name": "Tlpt Readiness",
+      "description": "tlpt_readiness via dora-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "get_dora_certificate",
+      "name": "Get Dora Certificate",
+      "description": "get_dora_certificate via dora-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "enforcement_status",
+      "name": "Enforcement Status",
+      "description": "enforcement_status via dora-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    },
+    {
+      "id": "generate_incident_report",
+      "name": "Generate Incident Report",
+      "description": "generate_incident_report via dora-compliance-mcp",
+      "tags": [
+        "mcp",
+        "compliance"
+      ]
+    }
+  ]
+}
