@@ -144,9 +144,9 @@ def check_access(api_key: str = ""):
 
 
 # ── Stripe payment links ────────────────────────────────────────
-STRIPE_199 = "https://buy.stripe.com/dRmcN70xS3ce7oh0Q88k90L?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"
-STRIPE_1499 = "https://buy.stripe.com/4gM9AV80kaEG0ZT42k8k837?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"
-STRIPE_5K = "https://buy.stripe.com/4gM7sN2G0bIKeQJfL28k833?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"
+STRIPE_199 = "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"
+STRIPE_1499 = "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"
+STRIPE_5K = "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"
 
 
 # ── Rate limiting ───────────────────────────────────────────────
@@ -349,9 +349,9 @@ def classify_entity(description: str, api_key: str = "") -> str:
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/dRmcN70xS3ce7oh0Q88k90L?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
+        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
     if err := _check_rate_limit(tier=tier):
-        return json.dumps({"error": err, "upgrade_url": "https://buy.stripe.com/dRmcN70xS3ce7oh0Q88k90L?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
+        return json.dumps({"error": err, "upgrade_url": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
 
     d = description.lower()
     matches = []
@@ -472,7 +472,7 @@ def audit_pillar(pillar_number: int, entity_description: str, current_controls: 
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/dRmcN70xS3ce7oh0Q88k90L?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
+        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
     if err := _check_rate_limit(tier=tier):
         return json.dumps({"error": err})
 
@@ -596,12 +596,12 @@ def audit_all_pillars(entity_description: str, current_controls: str = "", api_k
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/dRmcN70xS3ce7oh0Q88k90L?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
+        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
     if tier == "free":
         return json.dumps({
             "error": "audit_all_pillars requires Starter tier (£79/mo) or above.",
             "free_alternative": "Run audit_pillar(N, ...) individually (10/day limit).",
-            "upgrade_url": "https://buy.stripe.com/dRmcN70xS3ce7oh0Q88k90L?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail",
+            "upgrade_url": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail",
         })
     if err := _check_rate_limit(tier=tier):
         return json.dumps({"error": err})
@@ -686,7 +686,7 @@ def classify_incident(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/dRmcN70xS3ce7oh0Q88k90L?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
+        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/5kQ6oJ0xS3ce8sl7ew8k91j?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
     if err := _check_rate_limit(tier=tier):
         return json.dumps({"error": err})
 
