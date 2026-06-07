@@ -57,8 +57,8 @@ export MEOK_PAYG_KEY="your_topup_token"
 ## 📖 Documentation
 
 - [Full Documentation](https://docs.meok.ai/dora-compliance-mcp)
-- [API Reference](https://api.meok.ai)
-- [EU AI Act Compliance Guide](https://councilof.ai/compliance)
+- [API Reference](https://meok-attestation-api.vercel.app)
+- [EU AI Act Compliance Guide](https://councilof.ai)
 
 ## 🛡️ Compliance
 
@@ -70,20 +70,20 @@ This MCP server is built with **EU AI Act compliance** built-in:
 - ✅ Article 26 — FRIA Support (where applicable)
 - ✅ Article 50 — AI Content Watermarking (where applicable)
 
-Need help getting compliant? **[Book a free 15-min diagnostic →](https://cal.com/csoai/august-audit)**
+Need help getting compliant? **[Book a free 15-min diagnostic →](mailto:nicholas@meok.ai?subject=Compliance%20diagnostic)**
 
 ## 🏢 Enterprise
 
 Need custom development, SLA guarantees, or white-label deployment?
 
-- **Pro:** $99/mo — Full MCP suite + EU AI Act tracking
-- **Enterprise:** $499/mo — Custom dev + SLA + Dedicated support
+- **Pro:** £79/mo — Full MCP suite + EU AI Act tracking
+- **Enterprise:** £499/mo — Custom dev + SLA + Dedicated support
 
-[View Pricing →](https://councilof.ai/pricing) | [Contact Sales →](mailto:sales@csoai.org)
+[View Pricing →](https://councilof.ai/payg) | [Contact Sales →](mailto:sales@meok.ai)
 
 ## 🤝 Part of the MEOK Ecosystem
 
-This server is part of the **[MEOK AI Labs](https://meok.ai)** ecosystem — 300+ MCP servers for sovereign AI governance.
+This server is part of the **[MEOK AI Labs](https://meok.ai)** ecosystem — 26 PyPI packages · ~16,300 monthly installs.
 
 | Domain | Purpose |
 |--------|---------|
