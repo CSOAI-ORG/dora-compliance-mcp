@@ -20,6 +20,9 @@ classifiers = [
 ]
 dependencies = ["mcp>=1.0.0"]
 
+[project.optional-dependencies]
+dev = ["hypothesis>=6.0", "pytest>=7.0", "pytest-asyncio>=0.21"]
+
 [project.urls]
 Homepage = "https://meok.ai/dora-compliance-mcp"
 Repository = "https://github.com/CSOAI-ORG/dora-compliance-mcp"
