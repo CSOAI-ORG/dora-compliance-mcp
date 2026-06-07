@@ -1,3 +1,4 @@
+<!-- mcp-name: io.github.CSOAI-ORG/dora-compliance-mcp -->
 # Dora Compliance MCP
 
 [![MEOK AI Labs](https://img.shields.io/badge/MEOK-AI%20Labs-667eea)](https://meok.ai)
@@ -98,3 +99,28 @@ MIT © [CSOAI-ORG](https://github.com/CSOAI-ORG)
 <p align="center">
   <sub>Built with 💜 by <a href="https://meok.ai">MEOK AI Labs</a> · UK Companies House 16939677</sub>
 </p>
+
+
+## Configuration
+
+Add to your `claude_desktop_config.json` (Claude Desktop) or your MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "dora-compliance-mcp": {
+      "command": "uvx",
+      "args": ["dora-compliance-mcp"]
+    }
+  }
+}
+```
+
+Or: `pip install dora-compliance-mcp` then run the `dora-compliance-mcp` command (stdio transport).
+
+## Examples
+
+Once configured, ask your assistant, for example:
+- "Use `classify_entity` to …"
+- "Use `list_pillars` to …"
+- "Use `audit_pillar` to …"

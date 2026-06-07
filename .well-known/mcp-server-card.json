@@ -1,0 +1,43 @@
+{
+  "name": "dora-compliance-mcp",
+  "title": "Dora Compliance Mcp",
+  "description": "DORA (EU Digital Operational Resilience Act) compliance for AI agents. 5-pillar audit, incident classification, Article 28 Register of Information, TLPT readiness. Regulation (EU) 2022/2554. By MEOK AI Labs.",
+  "version": "1.4.4",
+  "homepage": "https://meok.ai",
+  "license": "MIT",
+  "transport": {
+    "type": "stdio"
+  },
+  "tools": [
+    {
+      "name": "classify_entity"
+    },
+    {
+      "name": "list_pillars"
+    },
+    {
+      "name": "audit_pillar"
+    },
+    {
+      "name": "audit_all_pillars"
+    },
+    {
+      "name": "classify_incident"
+    },
+    {
+      "name": "register_of_information_template"
+    },
+    {
+      "name": "tlpt_readiness"
+    },
+    {
+      "name": "get_dora_certificate"
+    },
+    {
+      "name": "enforcement_status"
+    },
+    {
+      "name": "generate_incident_report"
+    }
+  ]
+}

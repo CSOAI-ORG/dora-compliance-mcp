@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dora-compliance-mcp"
-version = "1.5.0"
+version = "1.4.4"
 description = "DORA (EU Digital Operational Resilience Act) compliance for AI agents. 5-pillar audit, incident classification, Article 28 Register of Information, TLPT readiness. Regulation (EU) 2022/2554. By MEOK AI Labs."
 license = {file = "LICENSE"}
 readme = "README.md"
@@ -27,7 +27,7 @@ Documentation = "https://meok.ai/docs/dora"
 
 [tool.hatch.build.targets.wheel]
 packages = ["."]
-only-include = ["server.py", "meok_x402.py"]
+only-include = ["server.py"]
 
 [project.scripts]
 dora-compliance-mcp = "server:main"
