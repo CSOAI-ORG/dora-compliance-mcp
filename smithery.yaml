@@ -1,40 +1,37 @@
-name: dora-compliance-mcp
-description: "DORA (EU Digital Operational Resilience Act) compliance for financial entities - 5-pillar audit, ICT incident classification per Article 23, Article 28 Register of Information, TLPT readiness assessment, and HMAC-signed attestation certificates"
-version: 1.2.7
-author: MEOK AI Labs
-homepage: https://safetyof.ai
-repository: https://github.com/MEOK-AI-Labs/dora-compliance-mcp
-license: MIT
-categories:
-  - compliance
-  - finance
-  - governance
-
-tools:
-  - name: classify_entity
-    description: "Classify a financial entity's DORA applicability - determines entity type from 20 categories, proportionality tier, and which pillars apply"
-  - name: list_pillars
-    description: "List all 5 DORA pillars with article ranges and key obligations under Regulation (EU) 2022/2554"
-  - name: audit_pillar
-    description: "Audit a specific DORA pillar (1-5) against entity controls with per-obligation pass/fail, gap list, and remediation priority"
-  - name: audit_all_pillars
-    description: "Run audits across all 5 DORA pillars with executive summary, overall score, and priority gaps (Pro tier)"
-  - name: classify_incident
-    description: "Classify an ICT incident against DORA major-incident thresholds per Commission Delegated Regulation (EU) 2024/1772 with 4h/72h/1-month reporting timeline"
-  - name: register_of_information_template
-    description: "Return the Article 28.3 Register of Information template structure that financial entities must submit annually"
-  - name: tlpt_readiness
-    description: "Assess Threat-Led Penetration Testing (Article 26) readiness with TIBER-EU methodology assessment and preparation checklist"
-  - name: get_dora_certificate
-    description: "Generate a cryptographically signed DORA compliance attestation with HMAC-SHA256 signature and verify URL (Pro tier)"
-  - name: enforcement_status
-    description: "Current DORA enforcement status, upcoming deadlines, pending RTS/ITS, and penalty information"
-
-build:
-  type: python
-  entrypoint: server.py
-  dependencies:
-    - mcp>=1.0.0
-
-runtime:
-  python: ">=3.10"
+# smithery.yaml — Smithery (https://smithery.ai) submission payload
+# Repo: CSOAI-ORG/dora-compliance-mcp
+# Generated: 2026-06-09
+# Transport: stdio (PyPI package, installed via uvx)
+# See: DISTRIBUTION_GAPS_2026-06-08.md for the channel strategy
+startCommand:
+  type: stdio
+  timeout: 120000
+  pingInterval: 5000
+  pingTimeout: 30000
+  configSchema:
+    type: object
+    required: []
+    properties:
+      apiKey:
+        type: string
+        description: "MEOK API key (optional; required for x402 paywalled tools)"
+        default: ""
+      x402PayTo:
+        type: string
+        description: "USDC address for x402 micropayments (default: meok.ai wallet)"
+        default: ""
+      logLevel:
+        type: string
+        description: "Log level (debug, info, warn, error)"
+        default: "info"
+    additionalProperties: false
+  commandFunction: |-
+    (config) => ({
+      command: 'uvx',
+      args: ['dora_compliance'],
+      env: {
+        MEOK_API_KEY: config.apiKey || '',
+        X402_PAY_TO: config.x402PayTo || '',
+        MEOK_LOG_LEVEL: config.logLevel || 'info',
+      }
+    })
