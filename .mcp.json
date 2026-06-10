@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "dora-compliance-mcp": {
+      "command": "uvx",
+      "args": [
+        "dora-compliance-mcp"
+      ]
+    }
+  }
+}
