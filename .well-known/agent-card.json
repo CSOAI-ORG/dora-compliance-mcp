@@ -1,0 +1,212 @@
+{
+  "name": "Dora Compliance Mcp",
+  "version": "1.4.4",
+  "url": "https://mcp.meok.ai/dora-compliance-mcp/a2a",
+  "capabilities": {
+    "streaming": false,
+    "pushNotifications": false,
+    "stateTransitionHistory": false
+  },
+  "protocolVersion": "0.3.0",
+  "description": "DORA (EU Digital Operational Resilience Act) compliance for AI agents. 5-pillar audit, incident classification, Article 28 Register of Information, TLPT readiness. Regulation (EU) 2022/2554. By MEOK AI Labs.",
+  "provider": {
+    "organization": "MEOK AI LABS",
+    "url": "https://meok.ai"
+  },
+  "defaultInputModes": [
+    "application/json",
+    "text/plain"
+  ],
+  "defaultOutputModes": [
+    "application/json",
+    "text/plain"
+  ],
+  "skills": [
+    {
+      "id": "classify_entity",
+      "name": "Classify Entity",
+      "description": "Classify Entity — a tool of the dora-compliance-mcp MCP.",
+      "tags": [
+        "compliance",
+        "dora",
+        "audit"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    },
+    {
+      "id": "list_pillars",
+      "name": "List Pillars",
+      "description": "List Pillars — a tool of the dora-compliance-mcp MCP.",
+      "tags": [
+        "compliance",
+        "dora",
+        "audit"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    },
+    {
+      "id": "audit_pillar",
+      "name": "Audit Pillar",
+      "description": "Audit Pillar — a tool of the dora-compliance-mcp MCP.",
+      "tags": [
+        "compliance",
+        "dora",
+        "audit"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    },
+    {
+      "id": "audit_all_pillars",
+      "name": "Audit All Pillars",
+      "description": "Audit All Pillars — a tool of the dora-compliance-mcp MCP.",
+      "tags": [
+        "compliance",
+        "dora",
+        "audit"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    },
+    {
+      "id": "classify_incident",
+      "name": "Classify Incident",
+      "description": "Classify Incident — a tool of the dora-compliance-mcp MCP.",
+      "tags": [
+        "compliance",
+        "dora",
+        "audit"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    },
+    {
+      "id": "register_of_information_template",
+      "name": "Register Of Information Template",
+      "description": "Register Of Information Template — a tool of the dora-compliance-mcp MCP.",
+      "tags": [
+        "compliance",
+        "dora",
+        "audit"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    },
+    {
+      "id": "tlpt_readiness",
+      "name": "Tlpt Readiness",
+      "description": "Tlpt Readiness — a tool of the dora-compliance-mcp MCP.",
+      "tags": [
+        "compliance",
+        "dora",
+        "audit"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    },
+    {
+      "id": "get_dora_certificate",
+      "name": "Get Dora Certificate",
+      "description": "Get Dora Certificate — a tool of the dora-compliance-mcp MCP.",
+      "tags": [
+        "compliance",
+        "dora",
+        "audit"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    },
+    {
+      "id": "enforcement_status",
+      "name": "Enforcement Status",
+      "description": "Enforcement Status — a tool of the dora-compliance-mcp MCP.",
+      "tags": [
+        "compliance",
+        "dora",
+        "audit"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    },
+    {
+      "id": "generate_incident_report",
+      "name": "Generate Incident Report",
+      "description": "Generate Incident Report — a tool of the dora-compliance-mcp MCP.",
+      "tags": [
+        "compliance",
+        "dora",
+        "audit"
+      ],
+      "inputModes": [
+        "application/json",
+        "text/plain"
+      ],
+      "outputModes": [
+        "application/json",
+        "text/plain"
+      ]
+    }
+  ],
+  "documentationUrl": "https://meok.ai",
+  "x-meok": {
+    "mcp_name": "dora-compliance-mcp",
+    "verifier": "https://proofof.ai/verify",
+    "governed_by": "CSOAI 52-article charter"
+  }
+}

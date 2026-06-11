@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.CSOAI-ORG/dora-compliance-mcp",
-  "version": "1.4.8",
+  "version": "1.4.10",
   "description": "DORA (EU Digital Operational Resilience Act) compliance for AI agents. 5-pillar audit, incident ...",
   "repository": {
     "url": "https://github.com/CSOAI-ORG/dora-compliance-mcp",
@@ -11,7 +11,7 @@
     {
       "registryType": "pypi",
       "identifier": "dora-compliance-mcp",
-      "version": "1.4.8",
+      "version": "1.4.10",
       "runtimeHint": "python",
       "transport": {
         "type": "stdio"
