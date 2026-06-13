@@ -1,0 +1,17 @@
+{
+  "name": "knowing_yucca/dora-compliance-mcp",
+  "title": "MEOK Dora Compliance Mcp",
+  "description": "Compliance MCP server: dora-compliance-mcp",
+  "readme": "# MEOK Dora Compliance Mcp\n\nCompliance MCP from MEOK AI.",
+  "categories": [
+    "AI",
+    "Compliance",
+    "Governance"
+  ],
+  "defaultRunInput": {
+    "tool": "quick_scan",
+    "arguments": {
+      "system": "example"
+    }
+  }
+}
