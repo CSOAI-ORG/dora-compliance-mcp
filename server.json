@@ -17,5 +17,47 @@
         "type": "stdio"
       }
     }
+  ],
+  "websiteUrl": "https://meok.ai/dora-compliance-mcp",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/CSOAI-ORG/dora-compliance-mcp/main/assets/icon.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+        "256x256"
+      ],
+      "theme": "dark"
+    }
+  ],
+  "metadata": {
+    "publisher": "MEOK AI Labs",
+    "categories": [
+      "compliance",
+      "ai-governance"
+    ]
+  },
+  "examples": [
+    {
+      "name": "Quick scan via dora-compliance-mcp",
+      "description": "Run a compliance check using the MCP server.",
+      "input": {
+        "tool": "quick_scan",
+        "arguments": {
+          "system": "example"
+        }
+      }
+    }
+  ],
+  "resources": [
+    {
+      "uri": "https://docs.meok.ai/dora-compliance-mcp/",
+      "name": "dora-compliance-mcp documentation",
+      "mimeType": "text/html"
+    },
+    {
+      "uri": "https://github.com/CSOAI-ORG/dora-compliance-mcp",
+      "name": "dora-compliance-mcp on GitHub",
+      "mimeType": "text/html"
+    }
   ]
 }
