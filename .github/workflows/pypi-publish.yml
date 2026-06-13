@@ -35,7 +35,7 @@ jobs:
       # environment name 'pypi', and workflow filename.
 
     - name: Sign the Python 🐍 distributions 📦 with Sigstore
-      uses: sigstore/gh-action-sigstore-python@v3.0.0
+      uses: sigstore/gh-action-sigstore-python@v3.4.0
       with:
         inputs: >
           ./dist/*.tar.gz
