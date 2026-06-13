@@ -1,5 +1,10 @@
 # Dora Compliance MCP
 
+<!-- OpenSSF + hygiene badges (auto-inserted by add_openssf_badge.py) -->
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/CSOAI-ORG/dora-compliance-mcp/badge)](https://scorecard.dev/viewer/?uri=github.com/CSOAI-ORG/dora-compliance-mcp)
+[![License](https://img.shields.io/github/license/CSOAI-ORG/dora-compliance-mcp)](https://github.com/CSOAI-ORG/dora-compliance-mcp/blob/main/LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/CSOAI-ORG/dora-compliance-mcp)](https://github.com/CSOAI-ORG/dora-compliance-mcp/commits/main)
+
 [![MEOK AI Labs](https://img.shields.io/badge/MEOK-AI%20Labs-667eea)](https://meok.ai)
 [![PAYG enabled](https://img.shields.io/badge/PAYG-%C2%A30.05%2Fcall-7c3aed?logo=stripe&logoColor=white&labelColor=1a1a2e)](https://councilof.ai/payg)
 [![EU AI Act](https://img.shields.io/badge/EU%20AI%20Act-Compliant-22c55e)](https://councilof.ai)
