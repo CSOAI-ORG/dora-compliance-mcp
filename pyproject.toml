@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dora-compliance-mcp"
-version = "1.4.10"
+version = "1.4.13"
 description = "DORA (EU Digital Operational Resilience Act) compliance for AI agents. 5-pillar audit, incident classification, Article 28 Register of Information, TLPT readiness. Regulation (EU) 2022/2554. By MEOK AI Labs."
 license = {file = "LICENSE"}
 readme = "README.md"
