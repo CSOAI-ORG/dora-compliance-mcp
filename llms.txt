@@ -1,94 +1,33 @@
 # dora-compliance-mcp
-> EU Digital Operational Resilience Act (Regulation (EU) 2022/2554) compliance for financial entities. Covers all 5 DORA pillars, ICT incident classification, TLPT readiness, and Article 28 Register of Information. By MEOK AI Labs.
+> DORA Compliance DORA (Regulation (EU) 2024/1687) compliance for financial ICT risk management. By MEOK AI Labs.
 
 ## Install
 pip install dora-compliance-mcp
 
 ## Auth
-- Free tier: 10 calls/day, no API key needed
-- Pro tier (£199/mo): unlimited + signed attestations, set MEOK_API_KEY env var
-- All tools are read-only and stateless
+- Free tier: 100 calls/month, no API key needed
+- Pro tier: unlimited, set MEOK_API_KEY env var
 
 ## Tools
 
-### classify_entity
-Classify a financial entity's DORA applicability and entity type.
-- `description` (str, required): Description of the financial entity
-- `api_key` (str, optional): MEOK API key
-- Returns: in_scope (bool), probable_entity_types, proportionality (full/simplified regime), days_since_enforcement
-- Use when: Determining if DORA applies to an organisation
+### quick_scan
+Instant compliance check from a system description. No API key required.
+- `system` (str): One-sentence AI system description
+- Returns: compliance_status, top_obligations
 
-### list_pillars
-List all 5 DORA pillars with article ranges and key obligations.
-- `api_key` (str, optional): MEOK API key
-- Returns: All 5 pillars with titles, article ranges, summaries, and key_obligations lists
-- Use when: Getting an overview of DORA structure
+### deadline_check
+Regulatory deadlines with days remaining.
+- Returns: List of dates with days_remaining
 
-### audit_pillar
-Audit a specific DORA pillar (1-5) against current controls.
-- `pillar_number` (int, required): 1-5
-- `entity_description` (str, required): Description of the entity
-- `current_controls` (str, optional): Description of current security controls
-- `api_key` (str, optional): MEOK API key
-- Returns: score_percent, passed/total, assessment (COMPLIANT/PARTIAL/NON_COMPLIANT), gaps_to_address, remediation_priority, per-obligation EVIDENCE_FOUND/GAP
-- Use when: Auditing compliance for a specific DORA pillar
+### framework_scan
+Detailed compliance assessment.
+- `framework` (str, required): DORA or other framework
+- `system` (str, required): System description
+- Returns: compliance_score, gaps, remediation
 
-### audit_all_pillars
-Full 5-pillar DORA audit with executive summary (Pro tier).
-- `entity_description` (str, required): Description of the entity
-- `current_controls` (str, optional): Current security controls
-- `api_key` (str, optional): MEOK API key
-- Returns: overall_score, overall_assessment, per-pillar results, priority_gaps ranked by score
-- Use when: Running a comprehensive DORA compliance sweep
+## Endpoints
+- MCP: https://gateway.meok.ai/mcp
+- A2A: https://gateway.meok.ai/.well-known/agent-card.json
 
-### classify_incident
-Classify an ICT incident against DORA major-incident thresholds (Commission Delegated Regulation (EU) 2024/1772).
-- `incident_description` (str, required): Description of the incident
-- `clients_affected` (int, optional, default 0): Number of clients/transactions affected
-- `duration_hours` (float, optional, default 0): Duration of the incident
-- `economic_impact_eur` (float, optional, default 0): Economic impact in EUR
-- `data_loss` (bool, optional, default False): Whether data loss occurred
-- `api_key` (str, optional): MEOK API key
-- Returns: classification (MAJOR_ICT_INCIDENT/NON_MAJOR), reporting_required, reporting_timeline (4h/72h/1mo deadlines as UTC timestamps), primary_criteria_met, action_required
-- Use when: An ICT incident occurs and you need to determine reporting obligations
-
-### register_of_information_template
-Article 28.3 Register of Information template structure for annual submission.
-- `api_key` (str, optional): MEOK API key
-- Returns: 6-section template (entity info, contracts, providers, service characteristics, provisions, subcontracting) with required fields per section, submission format, penalty info
-- Use when: Preparing the annual Register of Information submission
-
-### tlpt_readiness
-Assess Threat-Led Penetration Testing (Article 26) readiness and scope.
-- `entity_description` (str, required): Description of the entity
-- `api_key` (str, optional): MEOK API key
-- Returns: probable_scope (IN_SCOPE/LIKELY_OUT), required_preparation checklist, common_pitfalls, typical_cost_eur
-- Use when: Assessing whether TLPT is required and what preparation is needed
-
-### get_dora_certificate
-Generate a cryptographically signed DORA compliance attestation (Pro tier).
-- `entity_name` (str, required): Entity name for the certificate
-- `overall_score` (float, required): Compliance score 0-100
-- `findings_csv` (str, optional): Comma-separated findings
-- `articles_audited_csv` (str, optional): Comma-separated article numbers
-- `include_pdf_base64` (bool, optional, default False): Include PDF as base64
-- `api_key` (str, optional): MEOK API key
-- Returns: HMAC-SHA256 signed certificate with verify_url, valid 365 days
-- Use when: Generating auditor-ready compliance evidence
-
-### enforcement_status
-Current DORA enforcement status and upcoming deadlines.
-- `api_key` (str, optional): MEOK API key
-- Returns: days_since_enforcement, current_status, next_milestones, penalty_headline
-- Use when: Checking current enforcement status and upcoming deadlines
-
-## Quick Example
-```python
-result = classify_entity(description="EU-licensed payment institution processing cross-border transfers")
-# Returns: in_scope=True, entity_type="payment_institution", proportionality="full_regime"
-```
-
-## Pay-per-call (PAYG)
-
-This MCP supports MEOK_PAYG_KEY env var for £0.05-per-call billing without a subscription.
-Top up: https://councilof.ai/payg
+## License
+MIT — https://github.com/CSOAI-ORG/dora-compliance-mcp/blob/main/LICENSE
