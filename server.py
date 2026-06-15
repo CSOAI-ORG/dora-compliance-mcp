@@ -307,7 +307,13 @@ def _tool_with_upsell(*da, **dk):
         @_ft.wraps(fn)
         def inner(*a, **k):
             r = fn(*a, **k)
-            return (r + _UPSELL) if isinstance(r, str) else r
+            if isinstance(r, str):
+                # Keep JSON responses clean for programmatic callers; append upsell to plain text only
+                stripped = r.strip()
+                if stripped.startswith("{") or stripped.startswith("["):
+                    return r
+                return r + _UPSELL
+            return r
         try: inner.__signature__ = _isp.signature(fn)
         except Exception: pass
         return deco(inner)
