@@ -1,0 +1,33 @@
+name: Publish to Smithery
+
+on:
+  release:
+    types: [published]
+
+permissions: {}
+  contents: read
+  attestations: write
+  id-token: write
+
+jobs:
+  publish:
+    name: Publish MCP Server to Smithery
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@1d0ff469b7ec7b3cb9d8673fde4c419b49eb5cdf # v6.0.0
+        with:
+          node-version: '20'
+
+      - name: Install Smithery CLI
+        run: npm install -g @smithery/cli@latest
+
+      - name: Publish to Smithery
+        run: smithery publish
+        env:
+          SMITHERY_TOKEN: ${{ secrets.SMITHERY_TOKEN }}
