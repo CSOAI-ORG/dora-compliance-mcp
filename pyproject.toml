@@ -4,12 +4,12 @@ build-backend = "hatchling.build"
 
 [project]
 name = "dora-compliance-mcp"
-version = "1.4.14"
-description = "DORA (EU Digital Operational Resilience Act) compliance for AI agents. 5-pillar audit, incident classification, Article 28 Register of Information, TLPT readiness. Regulation (EU) 2022/2554. By MEOK AI Labs."
+version = "1.4.17"
+description = "DORA measurement for AI agents. 5-pillar audit, incident classification, Article 28 Register of Information. Regulation (EU) 2022/2554. Measurement, not certification. By CSOAI Ltd (Council of AI)."
 license = {file = "LICENSE"}
 readme = "README.md"
 requires-python = ">=3.10"
-authors = [{name = "MEOK AI Labs", email = "hello@meok.ai"}]
+authors = [{name = "CSOAI Ltd", email = "nicholas@csoai.org"}]
 keywords = ["mcp", "dora", "eu-dora", "digital-operational-resilience-act", "financial-compliance", "regulation", "ict-risk", "fintech-compliance", "meok-ai-labs", "eu-regulation", "banking-compliance"]
 classifiers = [
     "Programming Language :: Python :: 3",

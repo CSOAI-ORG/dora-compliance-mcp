@@ -6,7 +6,7 @@
 
 # Dora Compliance MCP
 
-[![MEOK AI Labs](https://img.shields.io/badge/MEOK-AI%20Labs-667eea)](https://meok.ai)
+[![Council of AI](https://img.shields.io/badge/MEOK-AI%20Labs-667eea)](https://councilof.ai)
 [![PAYG enabled](https://img.shields.io/badge/PAYG-%C2%A30.05%2Fcall-7c3aed?logo=stripe&logoColor=white&labelColor=1a1a2e)](https://councilof.ai/payg)
 [![EU AI Act](https://img.shields.io/badge/EU%20AI%20Act-Compliant-22c55e)](https://councilof.ai)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -59,7 +59,7 @@ export MEOK_PAYG_KEY="your_topup_token"
 
 ## 📖 Documentation
 
-- [Full Documentation](https://docs.meok.ai/dora-compliance-mcp)
+- [Full Documentation](https://docs.councilof.ai/dora-compliance-mcp)
 - [API Reference](https://councilof.ai/api-docs)
 - [EU AI Act Compliance Guide](https://councilof.ai)
 
@@ -73,26 +73,24 @@ This MCP server is built with **EU AI Act compliance** built-in:
 - ✅ Article 26 — FRIA Support (where applicable)
 - ✅ Article 50 — AI Content Watermarking (where applicable)
 
-Need help getting compliant? **[Book a free 15-min diagnostic →](mailto:nicholas@meok.ai?subject=Compliance%20diagnostic)**
+Need help getting compliant? **[Book a free 15-min diagnostic →](mailto:nicholas@councilof.ai?subject=Compliance%20diagnostic)**
 
 ## 🏢 Enterprise
 
 Need custom development, SLA guarantees, or white-label deployment?
 
-- **Pro:** £79/mo — Full MCP suite + EU AI Act tracking
-- **Enterprise:** £499/mo — Custom dev + SLA + Dedicated support
 
-[View Pricing →](https://councilof.ai/payg) | [Contact Sales →](mailto:sales@meok.ai)
+[View Pricing →](https://councilof.ai/payg) | [Contact Sales →](mailto:sales@councilof.ai)
 
 ## 🤝 Part of the MEOK Ecosystem
 
-This server is part of the **[MEOK AI Labs](https://meok.ai)** ecosystem — 26 PyPI packages · ~16,300 monthly installs.
+This server is part of the **[Council of AI](https://councilof.ai)** ecosystem — 26 PyPI packages · ~public measurement tools.
 
 | Domain | Purpose |
 |--------|---------|
 | [councilof.ai](https://councilof.ai) | EU AI Act compliance marketplace |
 | [safetyof.ai](https://safetyof.ai) | AI safety & monitoring |
-| [meok.ai](https://meok.ai) | Sovereign AI platform |
+| [councilof.ai](https://councilof.ai) | Sovereign AI platform |
 | [cobolbridge.ai](https://cobolbridge.ai) | Legacy modernization |
 
 ## 📜 License
@@ -102,7 +100,7 @@ MIT © [CSOAI-ORG](https://github.com/CSOAI-ORG)
 ---
 
 <p align="center">
-  <sub>Built with 💜 by <a href="https://meok.ai">MEOK AI Labs</a> · UK Companies House 16939677</sub>
+  <sub>Built with 💜 by <a href="https://councilof.ai">Council of AI</a> · UK Companies House 16939677</sub>
 </p>
 
 
