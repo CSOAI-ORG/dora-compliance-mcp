@@ -18,7 +18,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
     "Topic :: Office/Business :: Financial",
 ]
-dependencies = ["mcp>=1.0.0"]
+dependencies = ["mcp>=2.0.0"]
 
 [project.urls]
 Homepage = "https://meok.ai/dora-compliance-mcp"
@@ -27,7 +27,7 @@ Documentation = "https://meok.ai/docs/dora"
 
 [tool.hatch.build.targets.wheel]
 packages = ["."]
-only-include = ["auth_middleware.py", "meok_x402.py", "server.py"]
+only-include = ["auth_middleware.py", "meok_x402.py", "server.py", "mcp2026_shim.py"]
 
 [project.scripts]
 dora-compliance-mcp = "server:main"
