@@ -21,7 +21,7 @@ classifiers = [
 dependencies = ["mcp>=1.0.0"]
 
 [project.urls]
-Homepage = "https://meok.ai/dora-compliance-mcp"
+Homepage = "https://meok.ai"
 Repository = "https://github.com/CSOAI-ORG/dora-compliance-mcp"
 Documentation = "https://meok.ai/docs/dora"
 
