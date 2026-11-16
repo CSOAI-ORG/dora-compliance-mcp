@@ -6,7 +6,7 @@ pip install dora-compliance-mcp
 
 ## Auth
 - Free tier: 10 calls/day, no API key needed
-- Pro tier (£199/mo): unlimited + signed attestations, set MEOK_API_KEY env var
+- Pro tier: unlimited + signed attestations, set MEOK_API_KEY env var
 - All tools are read-only and stateless
 
 ## Tools

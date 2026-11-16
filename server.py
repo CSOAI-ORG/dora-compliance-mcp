@@ -151,9 +151,9 @@ def check_access(api_key: str = ""):
 
 
 # ── Stripe payment links ────────────────────────────────────────
-STRIPE_199 = "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"
-STRIPE_1499 = "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"
-STRIPE_5K = "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"
+STRIPE_199 = "https://meok.ai/pricing"
+STRIPE_1499 = "https://meok.ai/pricing"
+STRIPE_5K = "https://meok.ai/pricing"
 
 
 # ── Rate limiting ───────────────────────────────────────────────
@@ -172,7 +172,7 @@ def _check_rate_limit(caller: str = "anonymous", tier: str = "free") -> Optional
     if len(_usage[caller]) >= FREE_DAILY_LIMIT:
         return (
             f"Free tier limit reached ({FREE_DAILY_LIMIT}/day). "
-            f"Upgrade to MEOK AI Labs Pro at £79/mo for unlimited access + signed attestations: {STRIPE_199}"
+            f"Upgrade to MEOK AI Labs Pro at a per-job quote for unlimited access + signed attestations: {STRIPE_199}"
         )
     _usage[caller].append(now)
     return None
@@ -362,9 +362,9 @@ def classify_entity(description: str, api_key: str = "") -> str:
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
+        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
     if err := _check_rate_limit(tier=tier):
-        return json.dumps({"error": err, "upgrade_url": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
+        return json.dumps({"error": err, "upgrade_url": "https://meok.ai/pricing"})
 
     d = description.lower()
     matches = []
@@ -485,7 +485,7 @@ def audit_pillar(pillar_number: int, entity_description: str, current_controls: 
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
+        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
     if err := _check_rate_limit(tier=tier):
         return json.dumps({"error": err})
 
@@ -609,12 +609,12 @@ def audit_all_pillars(entity_description: str, current_controls: str = "", api_k
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
+        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
     if tier == "free":
         return json.dumps({
-            "error": "audit_all_pillars requires Starter tier (£79/mo) or above.",
+            "error": "audit_all_pillars requires Starter tier or above.",
             "free_alternative": "Run audit_pillar(N, ...) individually (10/day limit).",
-            "upgrade_url": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail",
+            "upgrade_url": "https://meok.ai/pricing",
         })
     if err := _check_rate_limit(tier=tier):
         return json.dumps({"error": err})
@@ -699,7 +699,7 @@ def classify_incident(
     """
     allowed, msg, tier = check_access(api_key)
     if not allowed:
-        return json.dumps({"error": msg, "upgrade_url": "https://buy.stripe.com/aFa7sNcgAdQS0ZT1Uc8k91t?utm_source=mcp&utm_medium=tool&utm_content=ratelimit_tail"})
+        return json.dumps({"error": msg, "upgrade_url": "https://meok.ai/pricing"})
     if err := _check_rate_limit(tier=tier):
         return json.dumps({"error": err})
 
@@ -936,7 +936,7 @@ def get_dora_certificate(
         return json.dumps({"error": msg, "upgrade_url": STRIPE_199})
     if tier == "free":
         return json.dumps({
-            "error": "Signed attestations require Pro (£79/mo) or Enterprise tier.",
+            "error": "Signed attestations require Pro or Enterprise tier.",
             "upgrade_url": STRIPE_199,
             "why_pro": "Cryptographic HMAC signature + public verify URL + PDF auditors accept. Unsigned self-reports don't pass procurement.",
         })
@@ -1187,7 +1187,7 @@ def generate_incident_report(
         ),
         "tier": tier,
         "upgrade_for_signed_version": (
-            "Pro tier (£199/mo) emits an HMAC-SHA256 signed evidence-pack version of the report "
+            "Pro tier emits an HMAC-SHA256 signed evidence-pack version of the report "
             "with a public verify URL — auditor-defensible without releasing the underlying SIEM data."
         ),
         "disclaimer": "Not legal advice. Confirm scope with your competent authority.",
